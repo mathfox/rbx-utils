@@ -1,6 +1,10 @@
 return function()
 	local assertDeepEqual = require(script.Parent)
 
+	it("should be a table", function()
+		expect(assertDeepEqual).to.be.a("table")
+	end)
+
 	it("should fail with a message when args are not equal", function()
 		local success, message = pcall(assertDeepEqual, 1, 2)
 
