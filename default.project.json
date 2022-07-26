@@ -1,0 +1,13 @@
+{
+   "name": "roblox-luau-utils",
+   "globIgnorePaths": [
+      "**/*.spec.lua"
+   ],
+   "tree": {
+      "$className": "DataModel",
+      "ReplicatedStorage": {
+         "$className": "ReplicatedStorage",
+         "$path": "src"
+      }
+   }
+}
