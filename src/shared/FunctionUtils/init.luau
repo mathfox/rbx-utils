@@ -5,8 +5,8 @@ local FunctionUtils = {
 	void = require(script.void),
 }
 
---@devblock:start
+--@block:dev:start
 table.freeze(FunctionUtils)
---@devblock:end
+--@block:dev:end
 
 return FunctionUtils

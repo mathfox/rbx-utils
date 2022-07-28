@@ -18,10 +18,10 @@ local function makeActionCreator<Type, Action, Args...>(name: Type, fn: (Args...
 
 	setmetatable(actionCreator, actionCreatorMetatable)
 
-	--@devblock:start
+	--@block:dev:start
 	table.freeze(actionCreatorMetatable)
 	table.freeze(actionCreator)
-	--@devblock:end
+	--@block:dev:end
 
 	return actionCreator
 end
