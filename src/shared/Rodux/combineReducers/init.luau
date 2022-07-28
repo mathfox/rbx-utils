@@ -5,11 +5,11 @@ type AnyAction = Types.RoduxAnyAction
 
 -- Creates a composite reducer from a map of keys and sub-reducers.
 local function combineReducers(map: { [any]: Reducer<any, AnyAction> }): Reducer<any, AnyAction>
-	-- @typeChecksStart
+	--@devblock:start
 	if type(map) ~= "table" then
 		error(('invalid type of "map" (#1 argument), expected a table, got (%s) instead'):format(type(map)), 2)
 	end
-	-- @typeChecksEnd
+	--@devblock:end
 	return function(state: { [any]: any }?, action: AnyAction)
 		local newState = {}
 

@@ -47,13 +47,13 @@ Component.__componentName = "Component"
 	PureComponent.
 ]]
 function Component:extend(name: string): StatefulComponent
-	if config.typeChecks then
-		if Type.of(self) ~= Type.StatefulComponentClass then
-			error('invalid "self" argument to "extend"')
-		elseif type(name) ~= "string" then
-			error("Component class name must be a string")
-		end
+	--@devblock:start
+	if Type.of(self) ~= Type.StatefulComponentClass then
+		error('invalid "self" argument to "extend"')
+	elseif type(name) ~= "string" then
+		error("Component class name must be a string")
 	end
+	--@devblock:end
 
 	local class = {}
 
@@ -87,11 +87,11 @@ function Component:__getDerivedState(incomingProps, incomingState)
 		local derivedState = componentClass.getDerivedStateFromProps(incomingProps, incomingState)
 
 		if derivedState ~= nil then
-			if config.typeChecks then
-				if type(derivedState) ~= "table" then
-					error("getDerivedStateFromProps must return a table!", 2)
-				end
+			--@devblock:start
+			if type(derivedState) ~= "table" then
+				error("getDerivedStateFromProps must return a table!", 2)
 			end
+			--@devblock:end
 
 			return derivedState
 		end
@@ -101,11 +101,11 @@ function Component:__getDerivedState(incomingProps, incomingState)
 end
 
 function Component:setState(mapState)
-	if config.typeChecks then
-		if Type.of(self) ~= Type.StatefulComponentInstance then
-			error("Invalid `self` argument to `extend`.", 2)
-		end
+	--@devblock:start
+	if Type.of(self) ~= Type.StatefulComponentInstance then
+		error("Invalid `self` argument to `extend`.", 2)
 	end
+	--@devblock:end
 
 	local internalData = self[InternalData]
 	local lifecyclePhase = internalData.lifecyclePhase
