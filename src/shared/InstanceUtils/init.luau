@@ -16,6 +16,8 @@ local InstanceUtils = {
 	waitUntilParentedTo = require(script.waitUntilParentedTo),
 }
 
+--@devblock:start
 table.freeze(InstanceUtils)
+--@devblock:end
 
 return InstanceUtils

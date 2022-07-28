@@ -3,8 +3,6 @@ local Symbol = require(script.Parent.Parent.Symbol)
 local createSignal = require(script.Parent.createSignal)
 local Type = require(script.Parent.Type)
 
-local config = require(script.Parent.GlobalConfig).get()
-
 local BindingImpl = Symbol("BindingImpl")
 
 local BindingInternalApi = {}
@@ -64,13 +62,13 @@ function BindingInternalApi.create(initialValue)
 end
 
 function BindingInternalApi.map(upstreamBinding, predicate)
-	if config.typeChecks then
-		if Type.of(upstreamBinding) ~= Type.Binding then
-			error("Expected arg #1 to be a binding", 2)
-		elseif type(predicate) ~= "function" then
-			error("Expected arg #1 to be a function", 2)
-		end
+	--@devblock:start
+	if Type.of(upstreamBinding) ~= Type.Binding then
+		error("Expected arg #1 to be a binding", 2)
+	elseif type(predicate) ~= "function" then
+		error("Expected arg #1 to be a function", 2)
 	end
+	--@devblock:end
 
 	local impl = {}
 
@@ -95,17 +93,17 @@ function BindingInternalApi.map(upstreamBinding, predicate)
 end
 
 function BindingInternalApi.join(upstreamBindings)
-	if config.typeChecks then
-		if type(upstreamBindings) ~= "table" then
-			error("Expected arg #1 to be of type table")
-		end
+	--@devblock:start
+	if type(upstreamBindings) ~= "table" then
+		error("Expected arg #1 to be of type table")
+	end
 
-		for key, value in upstreamBindings do
-			if Type.of(value) ~= Type.Binding then
-				error(("Expected arg #1 to contain only bindings, but key %q had a non-binding value"):format(tostring(key)), 2)
-			end
+	for key, value in upstreamBindings do
+		if Type.of(value) ~= Type.Binding then
+			error(("Expected arg #1 to contain only bindings, but key %q had a non-binding value"):format(tostring(key)), 2)
 		end
 	end
+	--@devblock:end
 
 	local impl = {}
 
