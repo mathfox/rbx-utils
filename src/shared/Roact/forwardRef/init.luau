@@ -3,8 +3,6 @@ local Option = require(script.Parent.Parent.Option)
 
 local Ref = require(script.Parent.PropMarkers.Ref)
 
-local config = require(script.Parent.GlobalConfig).get()
-
 local excludeRef = {
 	[Ref] = Option.None,
 }
@@ -14,11 +12,11 @@ local excludeRef = {
 	callback which accepts props and a ref, and returns an element.
 ]]
 local function forwardRef(render)
-	if config.typeChecks then
-		if type(render) ~= "function" then
-			error("Expected arg #1 to be a function", 2)
-		end
+	--@block:dev:start
+	if type(render) ~= "function" then
+		error("Expected arg #1 to be a function", 2)
 	end
+	--@block:dev:end
 
 	return function(props)
 		local ref = props[Ref]

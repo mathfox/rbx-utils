@@ -15,7 +15,6 @@ local InstanceUtils = {
 	waitForDescendantWhichIsA = require(script.waitForDescendantWhichIsA),
 	waitUntilParentedTo = require(script.waitUntilParentedTo),
 }
-
 --@block:dev:start
 table.freeze(InstanceUtils)
 --@block:dev:end

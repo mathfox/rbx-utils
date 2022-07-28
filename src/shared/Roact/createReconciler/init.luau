@@ -232,11 +232,11 @@ local function createReconciler(renderer)
 			internalAssert(Type.of(virtualNode) == Type.VirtualNode, "Expected arg #1 to be of type VirtualNode")
 		end
 
-		if config.typeChecks then
-			if Type.of(newElement) ~= Type.Element and type(newElement) ~= "boolean" and newElement ~= nil then
-				error("Expected arg #2 to be of type Element, boolean, or nil", 2)
-			end
+		--@block:dev:start
+		if Type.of(newElement) ~= Type.Element and type(newElement) ~= "boolean" and newElement ~= nil then
+			error("Expected arg #2 to be of type Element, boolean, or nil", 2)
 		end
+		--@block:dev:end
 
 		-- If nothing changed, we can skip this update
 		if virtualNode.currentElement == newElement and newState == nil then
@@ -291,13 +291,13 @@ local function createReconciler(renderer)
 			internalAssert(type(legacyContext) == "table" or legacyContext == nil, "Expected arg #5 to be of type table or nil")
 		end
 
-		if config.typeChecks then
-			if hostKey == nil then
-				error("Expected arg #3 to be non-nil", 2)
-			elseif Type.of(element) ~= Type.Element and type(element) ~= "boolean" then
-				error("Expected arg #1 to be of type Element or boolean", 2)
-			end
+		--@block:dev:start
+		if hostKey == nil then
+			error("Expected arg #3 to be non-nil", 2)
+		elseif Type.of(element) ~= Type.Element and type(element) ~= "boolean" then
+			error("Expected arg #1 to be of type Element or boolean", 2)
 		end
+		--@block:dev:end
 
 		return {
 			[Type] = Type.VirtualNode,
@@ -365,13 +365,13 @@ local function createReconciler(renderer)
 			internalAssert(type(legacyContext) == "table" or legacyContext == nil, "Expected arg #5 to be of type table or nil")
 		end
 
-		if config.typeChecks then
-			if hostKey == nil then
-				error("Expected arg #3 to be non-nil", 2)
-			elseif Type.of(element) ~= Type.Element and type(element) ~= "boolean" then
-				error("Expected arg #1 to be of type Element or boolean", 2)
-			end
+		--@block:dev:start
+		if hostKey == nil then
+			error("Expected arg #3 to be non-nil", 2)
+		elseif Type.of(element) ~= Type.Element and type(element) ~= "boolean" then
+			error("Expected arg #1 to be of type Element or boolean", 2)
 		end
+		--@block:dev:end
 
 		-- Boolean values render as nil to enable terse conditional rendering.
 		if type(element) == "boolean" then
@@ -404,13 +404,13 @@ local function createReconciler(renderer)
 		it, and mounts it.
 	]]
 	local function mountVirtualTree(element, hostParent, hostKey)
-		if config.typeChecks then
-			if Type.of(element) ~= Type.Element then
-				error("Expected arg #1 to be of type Element", 2)
-			elseif not renderer.isHostObject(hostParent) and hostParent ~= nil then
-				error("Expected arg #2 to be a host object", 2)
-			end
+		--@block:dev:start
+		if Type.of(element) ~= Type.Element then
+			error("Expected arg #1 to be of type Element", 2)
+		elseif not renderer.isHostObject(hostParent) and hostParent ~= nil then
+			error("Expected arg #2 to be a host object", 2)
 		end
+		--@block:dev:end
 
 		if hostKey == nil then
 			hostKey = "RoactTree"
@@ -439,13 +439,13 @@ local function createReconciler(renderer)
 	]]
 	local function unmountVirtualTree(tree)
 		local internalData = tree[InternalData]
-		if config.typeChecks then
-			if Type.of(tree) ~= Type.VirtualTree then
-				error("Expected arg #1 to be a Roact handle", 2)
-			elseif not internalData.mounted then
-				error("Cannot unmounted a Roact tree that has already been unmounted", 2)
-			end
+		--@block:dev:start
+		if Type.of(tree) ~= Type.VirtualTree then
+			error("Expected arg #1 to be a Roact handle", 2)
+		elseif not internalData.mounted then
+			error("Cannot unmounted a Roact tree that has already been unmounted", 2)
 		end
+		--@block:dev:end
 
 		internalData.mounted = false
 
@@ -460,13 +460,13 @@ local function createReconciler(renderer)
 	]]
 	local function updateVirtualTree(tree, newElement)
 		local internalData = tree[InternalData]
-		if config.typeChecks then
-			if Type.of(tree) ~= Type.VirtualTree then
-				error("Expected arg #1 to be a Roact handle", 2)
-			elseif Type.of(newElement) ~= Type.Element then
-				error("Expected arg #2 to be a Roact Element", 2)
-			end
+		--@block:dev:start
+		if Type.of(tree) ~= Type.VirtualTree then
+			error("Expected arg #1 to be a Roact handle", 2)
+		elseif Type.of(newElement) ~= Type.Element then
+			error("Expected arg #2 to be a Roact Element", 2)
 		end
+		--@block:dev:end
 
 		internalData.rootNode = updateVirtualNode(internalData.rootNode, newElement)
 

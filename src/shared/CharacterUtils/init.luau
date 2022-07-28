@@ -6,7 +6,8 @@ local CharacterUtils = {
 	getPlayerRootPart = require(script.getPlayerRootPart),
 	unequipPlayerTools = require(script.unequipPlayerTools),
 }
-
+--@block:dev:start
 table.freeze(CharacterUtils)
+--@block:dev:end
 
 return CharacterUtils

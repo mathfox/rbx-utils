@@ -36,8 +36,13 @@ function ElementKindInternal.fromComponent(component)
 	return if component == Portal then ElementKind.Portal else componentTypesToKinds[typeof(component)]
 end
 
-setmetatable(ElementKind, table.freeze({ __index = ElementKindInternal }))
+local ElementKindMetatable = { __index = ElementKindInternal }
 
+setmetatable(ElementKind, ElementKindMetatable)
+
+--@block:dev:start
+table.freeze(ElementKindMetatable)
 table.freeze(ElementKind)
+--@block:dev:end
 
 return ElementKind
