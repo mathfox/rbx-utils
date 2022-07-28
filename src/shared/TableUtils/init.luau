@@ -20,7 +20,8 @@ local TableUtils = {
 	some = require(script.some),
 	values = require(script.values),
 }
-
+--@block:dev:start
 table.freeze(TableUtils)
+--@block:dev:end
 
 return TableUtils

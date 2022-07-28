@@ -157,8 +157,9 @@ local JanitorExport = {
 		return setmetatable({}, Janitor)
 	end,
 }
-
+--@block:dev:start
 table.freeze(JanitorExport)
+--@block:dev:end
 
 return JanitorExport :: {
 	is: (object: any) -> boolean,

@@ -32,16 +32,18 @@ function TypeInternal.of(value)
 	return if typeof(value) ~= "table" then nil else value[Type]
 end
 
-setmetatable(
-	Type,
-	table.freeze({
-		__index = TypeInternal,
-		__tostring = function()
-			return "RoactType"
-		end,
-	})
-)
+local TypeMetatable = {
+	__index = TypeInternal,
+	__tostring = function()
+		return "RoactType"
+	end,
+}
 
+setmetatable(Type, TypeMetatable)
+
+--@block:dev:start
+table.freeze(TypeMetatable)
 table.freeze(Type)
+--@block:dev:end
 
 return Type

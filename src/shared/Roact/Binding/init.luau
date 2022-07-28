@@ -62,13 +62,13 @@ function BindingInternalApi.create(initialValue)
 end
 
 function BindingInternalApi.map(upstreamBinding, predicate)
-	--@devblock:start
+	--@block:dev:start
 	if Type.of(upstreamBinding) ~= Type.Binding then
 		error("Expected arg #1 to be a binding", 2)
 	elseif type(predicate) ~= "function" then
 		error("Expected arg #1 to be a function", 2)
 	end
-	--@devblock:end
+	--@block:dev:end
 
 	local impl = {}
 
@@ -93,7 +93,7 @@ function BindingInternalApi.map(upstreamBinding, predicate)
 end
 
 function BindingInternalApi.join(upstreamBindings)
-	--@devblock:start
+	--@block:dev:start
 	if type(upstreamBindings) ~= "table" then
 		error("Expected arg #1 to be of type table")
 	end
@@ -103,7 +103,7 @@ function BindingInternalApi.join(upstreamBindings)
 			error(("Expected arg #1 to contain only bindings, but key %q had a non-binding value"):format(tostring(key)), 2)
 		end
 	end
-	--@devblock:end
+	--@block:dev:end
 
 	local impl = {}
 

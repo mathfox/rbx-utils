@@ -41,15 +41,15 @@ Instead, consider using a utility function to merge tables of children together:
 	props. If specified, the passed `props` table is mutated!
 ]]
 local function createElement(component: string | FunctionComponent | StatefulComponent, props: { [any]: any }?, children: { [any]: any }?): Element
-	if config.typeChecks then
-		if component == nil then
-			error('"component" argument is required')
-		elseif type(props) ~= "table" and props ~= nil then
-			error('"props" must be either a table or nil')
-		elseif type(children) ~= "table" and children ~= nil then
-			error('"children" must be either a table or nil')
-		end
+	--@block:dev:start
+	if component == nil then
+		error('"component" argument is required')
+	elseif type(props) ~= "table" and props ~= nil then
+		error('"props" must be either a table or nil')
+	elseif type(children) ~= "table" and children ~= nil then
+		error('"children" must be either a table or nil')
 	end
+	--@block:dev:end
 
 	if props == nil then
 		props = {}

@@ -41,49 +41,73 @@ local function EnumeratorConstructor<T>(enumeratorName: string, enumeratorValues
 		local keysToEnumeratorItems: { [string]: EnumeratorItem<T> } = {}
 
 		for key, value in enumeratorValues :: { [string]: T } do
-			local enumeratorItem = table.freeze(setmetatable(
-				{ name = key, value = value, type = enumerator },
-				table.freeze({
-					__tostring = function()
-						return ("%s.%s"):format(enumeratorName, key)
-					end,
-				})
-			)) :: EnumeratorItem<T>
+			local enumeratorItem: EnumeratorItem<T> = { name = key, value = value, type = enumerator }
+			local enumeratorItemMetatable = {
+				__tostring = function()
+					return ("%s.%s"):format(enumeratorName, key)
+				end,
+			}
+
+			setmetatable(enumeratorItem, enumeratorItemMetatable)
+
+			--@block:dev:start
+			table.freeze(enumeratorItemMetatable)
+			table.freeze(enumeratorItem)
+			--@block:dev:end
 
 			keysToEnumeratorItems[key] = enumeratorItem
 			valuesToEnumeratorItems[value] = enumeratorItem
 		end
 
-		return table.freeze(setmetatable(
-			enumerator,
-			table.freeze({
-				__index = keysToEnumeratorItems,
-				__tostring = function()
-					return enumeratorName
-				end,
-			})
-		))
+		local enumeratorMetatable = {
+			__index = keysToEnumeratorItems,
+			__tostring = function()
+				return enumeratorName
+			end,
+		}
+
+		setmetatable(enumerator, enumeratorMetatable)
+
+		--@block:dev:start
+		table.freeze(enumeratorMetatable)
+		table.freeze(enumerator)
+		--@block:dev:end
+
+		return enumerator
 	else
 		for index, value in enumeratorValues :: { string } do
-			valuesToEnumeratorItems[value] = table.freeze(setmetatable(
-				{ name = value, value = value, type = enumerator },
-				table.freeze({
-					__tostring = function()
-						return ("%s.%s"):format(enumeratorName, value)
-					end,
-				})
-			)) :: EnumeratorItem
+			local enumeratorItem: EnumeratorItem = { name = value, value = value, type = enumerator }
+			local enumeratorItemMetatable = {
+				__tostring = function()
+					return ("%s.%s"):format(enumeratorName, value)
+				end,
+			}
+
+			setmetatable(enumeratorItem, enumeratorItemMetatable)
+
+			--@block:dev:start
+			table.freeze(enumeratorItemMetatable)
+			table.freeze(enumeratorItem)
+			--@block:dev:end
+
+			valuesToEnumeratorItems[value] = enumeratorItem
 		end
 
-		return table.freeze(setmetatable(
-			enumerator,
-			table.freeze({
-				__index = valuesToEnumeratorItems,
-				__tostring = function()
-					return enumeratorName
-				end,
-			})
-		))
+		local enumeratorMetatable = {
+			__index = valuesToEnumeratorItems,
+			__tostring = function()
+				return enumeratorName
+			end,
+		}
+
+		setmetatable(enumerator, enumeratorMetatable)
+
+		--@block:dev:start
+		table.freeze(enumeratorMetatable)
+		table.freeze(enumerator)
+		--@block:dev:end
+
+		return enumerator
 	end
 end
 
