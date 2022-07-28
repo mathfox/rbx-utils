@@ -38,7 +38,7 @@ Store.__index = Store
 	valid.
 ]]
 function Store.new(reducer, initialState, middlewares: { (...any) -> (...any) }, errorReporter)
-	--@devblock:start
+	--@block:dev:start
 	if type(reducer) ~= "function" then
 		error("Bad argument #1 to Store.new, expected function.", 2)
 	elseif middlewares ~= nil and type(middlewares) ~= "table" then
@@ -52,7 +52,7 @@ function Store.new(reducer, initialState, middlewares: { (...any) -> (...any) },
 			end
 		end
 	end
-	--@devblock:end
+	--@block:dev:end
 	local self = {}
 
 	self._errorReporter = if errorReporter then errorReporter else rethrowErrorReporter
@@ -195,8 +195,8 @@ function Store:flush()
 	self._lastState = state
 end
 
---@devblock:start
+--@block:dev:start
 table.freeze(Store)
---@devblock:end
+--@block:dev:end
 
 return Store
