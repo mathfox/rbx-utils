@@ -1,5 +1,6 @@
 local assign = require(script.Parent.Parent.TableUtils.assign)
 local Symbol = require(script.Parent.Parent.Symbol)
+local Types = require(script.Parent.Parent.Types)
 
 local ComponentLifecyclePhase = require(script.Parent.ComponentLifecyclePhase)
 local invalidSetStateMessages = require(script.Parent.invalidSetStateMessages)
@@ -7,6 +8,8 @@ local internalAssert = require(script.Parent.internalAssert)
 local Type = require(script.Parent.Type)
 
 local config = require(script.Parent.GlobalConfig).get()
+
+type StatefulComponent = Types.RoactStatefulComponent
 
 --[[
 	Calling setState during certain lifecycle allowed methods has the potential
@@ -43,7 +46,7 @@ Component.__componentName = "Component"
 	Components can not be extended beyond this point, with the exception of
 	PureComponent.
 ]]
-function Component:extend(name: string)
+function Component:extend(name: string): StatefulComponent
 	if config.typeChecks then
 		if Type.of(self) ~= Type.StatefulComponentClass then
 			error('invalid "self" argument to "extend"')

@@ -1,5 +1,5 @@
 {
-   "name": "roblox-luau-utils",
+   "name": "rbx-utils",
    "globIgnorePaths": [
       "**/*.spec.lua"
    ],

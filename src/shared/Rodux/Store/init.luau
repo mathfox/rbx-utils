@@ -2,8 +2,6 @@ local RunService = game:GetService("RunService")
 
 local Signal = require(script.Parent.Signal)
 
-local config = require(script.Parent.GlobalConfig).get()
-
 local ACTION_LOG_LENGTH = 3
 
 local rethrowErrorReporter = {
@@ -40,21 +38,21 @@ Store.__index = Store
 	valid.
 ]]
 function Store.new(reducer, initialState, middlewares: { (...any) -> (...any) }, errorReporter)
-	if config.typeChecks then
-		if type(reducer) ~= "function" then
-			error("Bad argument #1 to Store.new, expected function.", 2)
-		elseif middlewares ~= nil and type(middlewares) ~= "table" then
-			error("Bad argument #3 to Store.new, expected nil or table.", 2)
-		end
+	-- @typeChecksStart
+	if type(reducer) ~= "function" then
+		error("Bad argument #1 to Store.new, expected function.", 2)
+	elseif middlewares ~= nil and type(middlewares) ~= "table" then
+		error("Bad argument #3 to Store.new, expected nil or table.", 2)
+	end
 
-		if middlewares ~= nil then
-			for i = 1, #middlewares, 1 do
-				if type(middlewares[i]) ~= "function" then
-					error(("Expected the middleware ('%s') at index %d to be a function."):format(tostring(middlewares[i]), i), 2)
-				end
+	if middlewares ~= nil then
+		for i = 1, #middlewares, 1 do
+			if type(middlewares[i]) ~= "function" then
+				error(("Expected the middleware ('%s') at index %d to be a function."):format(tostring(middlewares[i]), i), 2)
 			end
 		end
 	end
+	-- @typeChecksEnd
 
 	local self = {}
 

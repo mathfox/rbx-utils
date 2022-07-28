@@ -7,9 +7,7 @@
 
 local Types = require(script.Parent.Parent.Types)
 
-local config = require(script.Parent.GlobalConfig).get()
-
-type RoduxStore<State = any> = Types.RoduxStore
+type Store<State = any> = Types.RoduxStore<State>
 
 local function immutableAppend(list, ...)
 	local new = {}
@@ -42,11 +40,11 @@ local Signal = {}
 Signal.__index = Signal
 
 function Signal:connect(callback)
-	if config.typeChecks then
-		if type(callback) ~= "function" then
-			error("invalid #1 argument, expected a function", 2)
-		end
+	-- @typeChecksStart
+	if type(callback) ~= "function" then
+		error("invalid #1 argument, expected a function", 2)
 	end
+   -- @typeChecksEnd
 
 	if self._store and self._store._isDispatching then
 		error(
@@ -104,7 +102,7 @@ export type RoduxInnerSignal = typeof(setmetatable({}, {} :: RoduxInnerSignalImp
 
 local SignalExport = {}
 
-function SignalExport.new(store: RoduxStore): RoduxInnerSignal
+function SignalExport.new(store: Store): RoduxInnerSignal
 	return setmetatable({
 		_listeners = {},
 		_store = store,
