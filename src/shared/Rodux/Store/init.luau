@@ -195,8 +195,7 @@ function Store:flush()
 	self._lastState = state
 end
 
---@block:dev:start
+--@block:dev:2
 table.freeze(Store)
---@block:dev:end
 
 return Store
