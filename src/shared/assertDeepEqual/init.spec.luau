@@ -1,8 +1,8 @@
 return function()
 	local assertDeepEqual = require(script.Parent)
 
-	it("should be a table", function()
-		expect(assertDeepEqual).to.be.a("table")
+	it("should be a function", function()
+		expect(assertDeepEqual).to.be.a("function")
 	end)
 
 	it("should fail with a message when args are not equal", function()

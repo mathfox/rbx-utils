@@ -8,6 +8,19 @@
       "ReplicatedStorage": {
          "$className": "ReplicatedStorage",
          "$path": "src"
+      },
+      "ServerStorage": {
+         "$className": "ServerStorage",
+         "IgnoreCodeBlocks": {
+            "$className": "Folder",
+            "$properties": {
+               "Attributes": {
+                  "dev": {
+                     "Bool": false
+                  }
+               }
+            }
+         }
       }
    }
 }

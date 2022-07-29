@@ -4,8 +4,8 @@ local ModuleScriptUtils = {
 	loadDescendants = require(script.loadDescendants),
 	loadDescendantsFilter = require(script.loadDescendantsFilter),
 }
---@block:dev:start
+
+--@block:dev:2
 table.freeze(ModuleScriptUtils)
---@block:dev:end
 
 return ModuleScriptUtils

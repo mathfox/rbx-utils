@@ -1,6 +1,4 @@
 return function()
-	local GlobalConfig = require(script.Parent.Parent.GlobalConfig)
-
 	local Signal = require(script.Parent)
 
 	it("should expose a table", function()
@@ -126,10 +124,6 @@ return function()
 	end)
 
 	it("should throw an error if the argument to `connect` is not a function", function()
-		GlobalConfig.set({
-			typeChecks = true,
-		})
-
 		local signal = Signal.new()
 
 		expect(function()

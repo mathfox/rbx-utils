@@ -8,7 +8,7 @@ local Players = game:GetService("Players")
 local CONTAINERS = { ServerScriptService, workspace, Players, StarterPlayer.StarterPlayerScripts, ReplicatedFirst }
 local INSTANCE_TO_SOURCE_MAP: { [Instance]: string } = {}
 
-local FOLDER_NAME = "IgnoreScriptBlocks"
+local FOLDER_NAME = "IgnoreCodeBlocks"
 
 local innerObjectValue = Instance.new("ObjectValue")
 
@@ -68,23 +68,39 @@ local function updateSource(source: string, blocks: { [string]: boolean })
 	local function runSourceAppend(index: number)
 		for startIndex = index, #split do
 			local startStr = split[startIndex]:gsub("\t", ""):gsub(" ", "")
-			local blockStartMatch = startStr:match("--@block:[%a]+:start")
+			local blockStartMatch = startStr:match("--@block:[%a]+:[%a%d]+")
 			if blockStartMatch then
-				local blockName = blockStartMatch:split(":")[2]
-				local blockEndStr = ("--@block:%s:end"):format(blockName)
+				local blockSplit = blockStartMatch:split(":")
+				local blockName = blockSplit[2]
+				local blockAction = blockSplit[3]
 
 				if blocks[blockName] then
-					for endIndex = startIndex + 1, #split do
-						local endStr = split[endIndex]:gsub("\t", ""):gsub(" ", "")
-						if endStr == blockEndStr then
-							runSourceAppend(endIndex + 1)
+					if blockAction == "start" then
+						local blockEndStr = ("--@block:%s:end"):format(blockName)
+
+						for endIndex = startIndex + 1, #split do
+							local endStr = split[endIndex]:gsub("\t", ""):gsub(" ", "")
+							if endStr == blockEndStr then
+								runSourceAppend(endIndex + 1)
+
+								break
+							end
+						end
+
+						break
+					else
+						local linesAmount = tonumber(blockAction)
+
+						if linesAmount and linesAmount ~= 0 then
+							local nextIndex = startIndex + 1 + linesAmount
+							if nextIndex < #split then
+								runSourceAppend(nextIndex)
+							end
 
 							break
 						end
 					end
 				end
-
-				break
 			else
 				newSource ..= split[startIndex] .. "\n"
 			end
