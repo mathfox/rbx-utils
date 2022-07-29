@@ -6,6 +6,7 @@ local RoactRodux = {
 	connect = require(script.connect),
 }
 
+--@block:dev:2
 table.freeze(RoactRodux)
 
 return RoactRodux

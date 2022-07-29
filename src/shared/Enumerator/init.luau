@@ -50,10 +50,9 @@ local function EnumeratorConstructor<T>(enumeratorName: string, enumeratorValues
 
 			setmetatable(enumeratorItem, enumeratorItemMetatable)
 
-			--@block:dev:start
+			--@block:dev:3
 			table.freeze(enumeratorItemMetatable)
 			table.freeze(enumeratorItem)
-			--@block:dev:end
 
 			keysToEnumeratorItems[key] = enumeratorItem
 			valuesToEnumeratorItems[value] = enumeratorItem
@@ -68,10 +67,9 @@ local function EnumeratorConstructor<T>(enumeratorName: string, enumeratorValues
 
 		setmetatable(enumerator, enumeratorMetatable)
 
-		--@block:dev:start
+		--@block:dev:3
 		table.freeze(enumeratorMetatable)
 		table.freeze(enumerator)
-		--@block:dev:end
 
 		return enumerator
 	else
@@ -85,10 +83,9 @@ local function EnumeratorConstructor<T>(enumeratorName: string, enumeratorValues
 
 			setmetatable(enumeratorItem, enumeratorItemMetatable)
 
-			--@block:dev:start
+			--@block:dev:3
 			table.freeze(enumeratorItemMetatable)
 			table.freeze(enumeratorItem)
-			--@block:dev:end
 
 			valuesToEnumeratorItems[value] = enumeratorItem
 		end
@@ -102,10 +99,9 @@ local function EnumeratorConstructor<T>(enumeratorName: string, enumeratorValues
 
 		setmetatable(enumerator, enumeratorMetatable)
 
-		--@block:dev:start
+		--@block:dev:3
 		table.freeze(enumeratorMetatable)
 		table.freeze(enumerator)
-		--@block:dev:end
 
 		return enumerator
 	end

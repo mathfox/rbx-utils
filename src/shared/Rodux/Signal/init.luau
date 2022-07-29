@@ -40,11 +40,10 @@ local Signal = {}
 Signal.__index = Signal
 
 function Signal:connect(callback)
-	--@block:dev:start
+	--@block:dev:4
 	if type(callback) ~= "function" then
 		error("invalid #1 argument, expected a function", 2)
 	end
-	--@block:dev:end
 
 	if self._store and self._store._isDispatching then
 		error(
@@ -109,8 +108,7 @@ function SignalExport.new(store: Store): RoduxInnerSignal
 	}, Signal)
 end
 
---@block:dev:start
+--@block:dev:2
 table.freeze(SignalExport)
---@block:dev:end
 
 return SignalExport

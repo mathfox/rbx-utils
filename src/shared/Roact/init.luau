@@ -34,6 +34,7 @@ local Roact = {
 	setGlobalConfig = GlobalConfig.set,
 }
 
+--@block:dev:2
 table.freeze(Roact)
 
 return Roact

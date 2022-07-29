@@ -2,8 +2,8 @@ local NumberSequenceUtils = {
 	multiplyNumberSequence = require(script.multiplyNumberSequence),
 	evaluateNumberSequence = require(script.evaluateNumberSequence),
 }
---@block:dev:start
+
+--@block:dev:2
 table.freeze(NumberSequenceUtils)
---@block:dev:end
 
 return NumberSequenceUtils

@@ -1,8 +1,8 @@
 local RaycastParamsUtils = {
 	cloneRaycastParams = require(script.cloneRaycastParams),
 }
---@block:dev:start
+
+--@block:dev:2
 table.freeze(RaycastParamsUtils)
---@block:dev:end
 
 return RaycastParamsUtils

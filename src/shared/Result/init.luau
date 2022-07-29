@@ -35,7 +35,16 @@ function Result:err<E>()
 end
 
 function Result:map<T, E, U>(op: (T) -> U)
-	return if getmetatable(self) == Err then self :: Result<T, E> else table.freeze(setmetatable({ _v = op(self._v :: T) }, Ok)) :: Result<U, E>
+	if getmetatable(self) == Err then
+		return self :: Result<T, E>
+	end
+
+	local ok = setmetatable({ _v = op(self._v :: T) }, Ok) :: Result<U, E>
+
+	--@block:dev:2
+	table.freeze(ok)
+
+	return ok
 end
 
 function Result:mapOr<T, U>(default: U, f: (T) -> U)
@@ -47,7 +56,16 @@ function Result:mapOrElse<T, E, U>(default: (E) -> U, f: (T) -> U)
 end
 
 function Result:mapErr<T, E, F>(op: (E) -> F)
-	return if getmetatable(self) == Ok then self :: Result<T, E> else table.freeze(setmetatable({ _v = op(self._v :: E) }, Err)) :: Result<T, F>
+	if getmetatable(self) == Ok then
+		return self :: Result<T, E>
+	end
+
+	local err = setmetatable({ _v = op(self._v :: E) }, Err) :: Result<T, F>
+
+	--@block:dev:2
+	table.freeze(err)
+
+	return err
 end
 
 function Result:inspect<T>(f: (T) -> ())
@@ -136,6 +154,7 @@ function Result:match<T, E>(onOk: (T) -> (), onErr: (E) -> ())
 	return if getmetatable(self) == Ok then onOk(self._v :: T) else onErr(self._v :: E)
 end
 
+--@block:dev:2
 table.freeze(Result)
 
 Ok.__index = Result
@@ -158,23 +177,31 @@ function Err:__eq(value)
 	return type(value) == "table" and getmetatable(value) == Err and value._v == self._v
 end
 
--- make sure no more edits could be applied
+--@block:dev:3
 table.freeze(Ok)
 table.freeze(Err)
 
 local ResultExport = {
 	Ok = function(value)
-		return table.freeze(setmetatable({ _v = value }, Ok))
+		local ok = setmetatable({ _v = value }, Ok)
+
+		--@block:dev:2
+		table.freeze(ok)
+
+		return ok
 	end,
 
 	Err = function(err)
-		return table.freeze(setmetatable({ _v = err }, Err))
+		local err = setmetatable({ _v = err }, Err)
+
+		--@block:dev:2
+		table.freeze(err)
+
+		return err
 	end,
 }
 
+--@block:dev:2
 table.freeze(ResultExport)
 
-return ResultExport :: {
-	Ok: <T>(T) -> Result<T, nil>,
-	Err: <E>(E) -> Result<nil, E>,
-}
+return ResultExport

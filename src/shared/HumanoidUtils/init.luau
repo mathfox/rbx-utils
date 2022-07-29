@@ -8,8 +8,8 @@ local HumanoidUtils = {
 	teleportHumanoidToCFrame = require(script.teleportHumanoidToCFrame),
 	teleportHumanoidToPosition = require(script.teleportHumanoidToPosition),
 }
---@block:dev:start
+
+--@block:dev:2
 table.freeze(HumanoidUtils)
---@block:dev:end
 
 return HumanoidUtils

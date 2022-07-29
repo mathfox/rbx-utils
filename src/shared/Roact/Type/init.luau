@@ -41,9 +41,8 @@ local TypeMetatable = {
 
 setmetatable(Type, TypeMetatable)
 
---@block:dev:start
+--@block:dev:3
 table.freeze(TypeMetatable)
 table.freeze(Type)
---@block:dev:end
 
 return Type
