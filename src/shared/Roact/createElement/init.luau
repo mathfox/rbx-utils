@@ -76,6 +76,9 @@ local function createElement(component: string | FunctionComponent | StatefulCom
 		element.source = debug.traceback("", 2):sub(2)
 	end
 
+	--@block:dev:2
+	table.freeze(element)
+
 	return element
 end
 

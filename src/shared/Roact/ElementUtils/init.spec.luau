@@ -5,6 +5,21 @@ return function()
 
 	local ElementUtils = require(script.Parent)
 
+	it("should expose a table", function()
+		expect(ElementUtils).to.be.a("table")
+		expect(select("#", require(script.Parent))).to.equal(1)
+	end)
+
+	it("should throw an error on attempt to modify the export table", function()
+		expect(function()
+			ElementUtils._ = {}
+		end).to.throw()
+
+		expect(function()
+			setmetatable(ElementUtils, {})
+		end).to.throw()
+	end)
+
 	describe("iterateElements", function()
 		it("should iterate once for a single child", function()
 			local child = createElement("TextLabel")

@@ -15,6 +15,7 @@ local ComponentLifecyclePhase = {
 	Idle = Symbol("idle"),
 }
 
+--@block:dev:2
 table.freeze(ComponentLifecyclePhase)
 
 return ComponentLifecyclePhase

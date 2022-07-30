@@ -1,11 +1,11 @@
 return function()
-	local Component = require(script.Parent.Parent.Component)
-	local ElementKind = require(script.Parent.Parent.ElementKind)
-	local GlobalConfig = require(script.Parent.Parent.GlobalConfig)
-	local Logging = require(script.Parent.Parent.Logging)
-	local Type = require(script.Parent.Parent.Type)
-	local Portal = require(script.Parent.Parent.Portal)
 	local Children = require(script.Parent.Parent.PropMarkers.Children)
+	local GlobalConfig = require(script.Parent.Parent.GlobalConfig)
+	local ElementKind = require(script.Parent.Parent.ElementKind)
+	local Component = require(script.Parent.Parent.Component)
+	local Logging = require(script.Parent.Parent.Logging)
+	local Portal = require(script.Parent.Parent.Portal)
+	local Type = require(script.Parent.Parent.Type)
 
 	local createElement = require(script.Parent)
 
@@ -105,5 +105,21 @@ return function()
 
 			expect(element.source).to.be.a("string")
 		end)
+	end)
+
+	it("should throw an error on attempt to modify element", function()
+		local element = createElement("BoolValue")
+
+		expect(function()
+			element._ = {}
+		end).to.throw()
+
+		expect(function()
+			setmetatable(element, {})
+		end).to.throw()
+	end)
+
+	it("should not contain a metatable", function()
+		expect(getmetatable(createElement("BoolValue"))).to.equal(nil)
 	end)
 end

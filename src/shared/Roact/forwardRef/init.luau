@@ -11,12 +11,12 @@ local excludeRef = {
 	Allows forwarding of refs to underlying host components. Accepts a render
 	callback which accepts props and a ref, and returns an element.
 ]]
-local function forwardRef(render)
-	--@block:dev:start
+-- TODO: proper function type
+local function forwardRef(render: (...any) -> (...any))
+	--@block:dev:4
 	if type(render) ~= "function" then
 		error("Expected arg #1 to be a function", 2)
 	end
-	--@block:dev:end
 
 	return function(props)
 		local ref = props[Ref]

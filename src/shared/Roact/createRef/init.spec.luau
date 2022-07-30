@@ -4,8 +4,9 @@ return function()
 
 	local createRef = require(script.Parent)
 
-	it("should expose a function", function()
+	it("should only expose a function", function()
 		expect(createRef).to.be.a("function")
+		expect(select("#", require(script.Parent))).to.equal(1)
 	end)
 
 	it("should create refs, which are specialized bindings", function()
@@ -55,5 +56,47 @@ return function()
 
 		expect(ref:getValue()).to.equal(10)
 		expect(ref:getValue()).to.equal(ref.current)
+	end)
+
+	it("should throw an error on attempt to modify the ref", function()
+		local ref = createRef()
+
+		expect(function()
+			ref._ = {}
+		end).to.throw()
+
+		expect(function()
+			setmetatable(ref, {})
+		end).to.throw()
+	end)
+
+	it("should throw an error on attempt to modify the metatable of ref", function()
+		local meta = getmetatable(createRef())
+
+		expect(function()
+			meta._ = {}
+		end).to.throw()
+
+		expect(function()
+			setmetatable(meta, {})
+		end).to.throw()
+	end)
+
+	it("should return an empty table", function()
+		local ref = createRef()
+
+		expect(next(ref)).to.equal(nil)
+		expect(#ref).to.equal(nil)
+	end)
+
+	it("should return table with known metatable", function()
+		local meta = getmetatable(createRef())
+
+		expect(function()
+			for key, value in meta do
+				assert(key == "__index" or key == "__newindex" or key == "__tostring")
+				assert(type(value) == "function")
+			end
+		end).never.throw()
 	end)
 end

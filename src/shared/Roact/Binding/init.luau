@@ -62,13 +62,12 @@ function BindingInternalApi.create(initialValue)
 end
 
 function BindingInternalApi.map(upstreamBinding, predicate)
-	--@block:dev:start
+	--@block:dev:6
 	if Type.of(upstreamBinding) ~= Type.Binding then
 		error("Expected arg #1 to be a binding", 2)
 	elseif type(predicate) ~= "function" then
 		error("Expected arg #1 to be a function", 2)
 	end
-	--@block:dev:end
 
 	local impl = {}
 

@@ -16,26 +16,15 @@ return function()
 
 	local robloxReconciler = createReconciler(RobloxRenderer)
 
-	it("should expose a function", function()
+	it("should only expose a function", function()
 		expect(createContext).to.be.a("function")
+		expect(select("#", require(script.Parent))).to.equal(1)
 	end)
 
 	it("should return a table", function()
 		local context = createContext("Test")
 		expect(context).to.be.ok()
 		expect(type(context)).to.equal("table")
-	end)
-
-	it("should throw on attempt to modify the returned table", function()
-		local context = createContext("Test")
-
-		expect(function()
-			context.new = {}
-		end).to.throw()
-
-		expect(function()
-			setmetatable(context, {})
-		end).to.throw()
 	end)
 
 	it("should contain a Provider and a Consumer", function()
@@ -421,5 +410,17 @@ return function()
 
 		robloxReconciler.unmountVirtualNode(node)
 		parent:Destroy()
+	end)
+
+	it("should throw on attempt to modify the returned table", function()
+		local context = createContext("Test")
+
+		expect(function()
+			context.new = {}
+		end).to.throw()
+
+		expect(function()
+			setmetatable(context, {})
+		end).to.throw()
 	end)
 end
