@@ -5,11 +5,12 @@
 ]]
 
 local function deepEqual(a, b)
-	if typeof(a) ~= typeof(b) then
+	local ta, tb = typeof(a), typeof(b)
+	if ta ~= tb then
 		return false, ("{1} is of type %s, but {2} is of type %s"):format(typeof(a), typeof(b))
 	end
 
-	if typeof(a) == "table" then
+	if ta == "table" then
 		local visitedKeys = {}
 
 		for key, value in a do

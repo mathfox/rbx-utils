@@ -24,6 +24,9 @@ local BindingPublicMeta = {
 	end,
 }
 
+--@block:dev:2
+table.freeze(BindingPublicMeta)
+
 function BindingInternalApi.update(binding, newValue)
 	return binding[BindingImpl].update(newValue)
 end
@@ -55,10 +58,15 @@ function BindingInternalApi.create(initialValue)
 		return impl.value
 	end
 
-	return setmetatable({
+	local binding = setmetatable({
 		[Type] = Type.Binding,
 		[BindingImpl] = impl,
-	}, BindingPublicMeta), impl.update
+	}, BindingPublicMeta)
+
+	--@block:dev:2
+	table.freeze(binding)
+
+	return binding, impl.update
 end
 
 function BindingInternalApi.map(upstreamBinding, predicate)
@@ -85,10 +93,15 @@ function BindingInternalApi.map(upstreamBinding, predicate)
 		return predicate(upstreamBinding:getValue())
 	end
 
-	return setmetatable({
+	local binding = setmetatable({
 		[Type] = Type.Binding,
 		[BindingImpl] = impl,
 	}, BindingPublicMeta)
+
+	--@block:dev:2
+	table.freeze(binding)
+
+	return binding
 end
 
 function BindingInternalApi.join(upstreamBindings)
@@ -103,7 +116,6 @@ function BindingInternalApi.join(upstreamBindings)
 		end
 	end
 	--@block:dev:end
-
 	local impl = {}
 
 	local function getValue()
@@ -146,10 +158,18 @@ function BindingInternalApi.join(upstreamBindings)
 		return getValue()
 	end
 
-	return setmetatable({
+	local binding = setmetatable({
 		[Type] = Type.Binding,
 		[BindingImpl] = impl,
 	}, BindingPublicMeta)
+
+	--@block:dev:2
+	table.freeze(binding)
+
+	return binding
 end
+
+--@block:dev:2
+table.freeze(BindingInternalApi)
 
 return BindingInternalApi

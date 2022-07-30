@@ -1,21 +1,21 @@
 return function()
-	local CharacterUtils = require(script.Parent)
+	local PlayerUtils = require(script.Parent)
 
 	it("should be a table", function()
-		expect(CharacterUtils).to.be.a("table")
+		expect(PlayerUtils).to.be.a("table")
 	end)
 
 	it("should not contain a metatable", function()
-		expect(getmetatable(CharacterUtils)).to.equal(nil)
+		expect(getmetatable(PlayerUtils)).to.equal(nil)
 	end)
 
 	it("should throw an error on attempt to modify the export table", function()
 		expect(function()
-			CharacterUtils.NEW_FIELD = {}
+			PlayerUtils.NEW_FIELD = {}
 		end).to.throw()
 
 		expect(function()
-			setmetatable(CharacterUtils, {})
+			setmetatable(PlayerUtils, {})
 		end).to.throw()
 	end)
 
@@ -23,14 +23,17 @@ return function()
 		local knownAPIs = {
 			getAlivePlayerHumanoid = "function",
 			getAlivePlayerRootPart = "function",
+			getFriendsList = "function",
+			getOnlineFriendsList = "function",
 			getPlayerFromCharacterDescendant = "table",
 			getPlayerHumanoid = "function",
 			getPlayerRootPart = "function",
+			getPlayersInRadiusList = "function",
 			unequipPlayerTools = "function",
 		}
 
 		expect(function()
-			for key, value in CharacterUtils do
+			for key, value in PlayerUtils do
 				assert(knownAPIs[key] ~= nil)
 				assert(type(value) == knownAPIs[key])
 			end

@@ -1,3 +1,4 @@
+--@block:dev:2
 -- reference: https://doc.rust-lang.org/std/result/enum.Result.html#
 
 local Types = require(script.Parent.Types)
@@ -116,6 +117,7 @@ function Result:unwrapErr()
 	return self._v
 end
 
+--@block:dev:1
 -- original naming: https://doc.rust-lang.org/std/result/enum.Result.html#method.and
 function Result:andRes<T, E, U>(res: Result<U, E>)
 	return if getmetatable(self) == Ok then res else self :: Result<T, E>
@@ -125,6 +127,7 @@ function Result:andThen<T, E, U>(op: (T) -> Result<U, E>)
 	return if getmetatable(self) == Err then self :: Result<T, E> else op(self._v :: T) :: Result<U, E>
 end
 
+--@block:dev:1
 -- original naming: https://doc.rust-lang.org/std/result/enum.Result.html#method.or
 function Result:orRes<T, E, F>(res: Result<T, F>)
 	return if getmetatable(self) == Err then res else self :: Result<T, E>
@@ -182,7 +185,7 @@ table.freeze(Ok)
 table.freeze(Err)
 
 local ResultExport = {
-	Ok = function(value)
+	Ok = function<T>(value): Ok<T>
 		local ok = setmetatable({ _v = value }, Ok)
 
 		--@block:dev:2
@@ -191,7 +194,7 @@ local ResultExport = {
 		return ok
 	end,
 
-	Err = function(err)
+	Err = function<E>(err): Err<E>
 		local err = setmetatable({ _v = err }, Err)
 
 		--@block:dev:2

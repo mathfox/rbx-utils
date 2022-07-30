@@ -20,6 +20,18 @@ return function()
 			update("foo")
 			expect(tostring(binding)).to.equal("RoactBinding(foo)")
 		end)
+
+		it("should throw an error on attempt to modify returned binding", function()
+			local binding = Binding.create(1)
+
+			expect(function()
+				binding._ = {}
+			end).to.throw()
+
+			expect(function()
+				setmetatable(binding, {})
+			end).to.throw()
+		end)
 	end)
 
 	describe("Binding object", function()
