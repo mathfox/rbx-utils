@@ -242,28 +242,20 @@ return function()
 		end)
 
 		it("should throw when a non-table value is passed", function()
-			GlobalConfig.scoped({
-				typeChecks = true,
-			}, function()
-				expect(function()
-					Binding.join("hi")
-				end).to.throw()
-			end)
+			expect(function()
+				Binding.join("hi")
+			end).to.throw()
 		end)
 
 		it("should throw when a non-binding value is passed via table", function()
-			GlobalConfig.scoped({
-				typeChecks = true,
-			}, function()
-				expect(function()
-					local binding = Binding.create(123)
+			expect(function()
+				local binding = Binding.create(123)
 
-					Binding.join({
-						binding,
-						"abcde",
-					})
-				end).to.throw()
-			end)
+				Binding.join({
+					binding,
+					"abcde",
+				})
+			end).to.throw()
 		end)
 	end)
 end

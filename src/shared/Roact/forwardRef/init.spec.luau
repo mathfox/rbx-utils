@@ -151,21 +151,13 @@ return function()
 	end)
 
 	it("should error if not provided a callback when type checking is enabled", function()
-		GlobalConfig.scoped({
-			typeChecks = true,
-		}, function()
-			expect(function()
-				forwardRef(nil)
-			end).to.throw()
-		end)
+		expect(function()
+			forwardRef(nil)
+		end).to.throw()
 
-		GlobalConfig.scoped({
-			typeChecks = true,
-		}, function()
-			expect(function()
-				forwardRef("foo")
-			end).to.throw()
-		end)
+		expect(function()
+			forwardRef("foo")
+		end).to.throw()
 	end)
 
 	it("should work without a ref to be forwarded", function()

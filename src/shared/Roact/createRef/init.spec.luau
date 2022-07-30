@@ -85,7 +85,7 @@ return function()
 		local ref = createRef()
 
 		expect(next(ref)).to.equal(nil)
-		expect(#ref).to.equal(nil)
+		expect(#ref).to.equal(0)
 	end)
 
 	it("should return table with known metatable", function()

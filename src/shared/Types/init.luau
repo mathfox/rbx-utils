@@ -365,5 +365,6 @@ export type RoactContext = {
 	Consumer: RoactContextConsumer,
 	Provider: RoactContextProvider,
 }
+export type RoactRef = {}
 
 return nil
