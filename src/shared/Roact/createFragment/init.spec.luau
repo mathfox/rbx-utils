@@ -6,7 +6,6 @@ return function()
 
 	it("should expose a function", function()
 		expect(createFragment).to.be.a("function")
-		expect(select("#", require(script.Parent))).to.equal(1)
 	end)
 
 	it("should throw an error on attempt to modify the fragment", function()

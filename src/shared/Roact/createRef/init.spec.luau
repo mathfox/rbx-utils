@@ -6,7 +6,6 @@ return function()
 
 	it("should only expose a function", function()
 		expect(createRef).to.be.a("function")
-		expect(select("#", require(script.Parent))).to.equal(1)
 	end)
 
 	it("should create refs, which are specialized bindings", function()

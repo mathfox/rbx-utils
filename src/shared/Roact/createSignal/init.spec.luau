@@ -3,6 +3,10 @@ return function()
 
 	local createSignal = require(script.Parent)
 
+	it("should expose a function", function()
+		expect(createSignal).to.be.a("function")
+	end)
+
 	it("should fire subscribers and disconnect them", function()
 		local signal = createSignal()
 

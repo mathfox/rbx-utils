@@ -1,6 +1,6 @@
 local Types = require(script.Parent.Parent.Types)
 
-type Reducer<State, Action> = Types.RoduxReducer<State, Action>
+export type Reducer<State, Action> = Types.RoduxReducer<State, Action>
 type AnyAction = Types.RoduxAnyAction
 
 local function createReducer<State>(initialState: State, handlers: { [any]: (State, AnyAction) -> State }): Reducer<State, AnyAction>

@@ -7,7 +7,6 @@ return function()
 
 	it("should expose a table", function()
 		expect(ElementUtils).to.be.a("table")
-		expect(select("#", require(script.Parent))).to.equal(1)
 	end)
 
 	it("should throw an error on attempt to modify the export table", function()

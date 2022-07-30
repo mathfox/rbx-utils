@@ -16,9 +16,8 @@ return function()
 
 	local robloxReconciler = createReconciler(RobloxRenderer)
 
-	it("should only expose a function", function()
+	it("should expose a function", function()
 		expect(createContext).to.be.a("function")
-		expect(select("#", require(script.Parent))).to.equal(1)
 	end)
 
 	it("should return a table", function()

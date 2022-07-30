@@ -9,6 +9,10 @@ return function()
 
 	local createElement = require(script.Parent)
 
+	it("should expose a function", function()
+		expect(createElement).to.be.a("function")
+	end)
+
 	it("should create new primitive elements", function()
 		local element = createElement("Frame")
 

@@ -1,6 +1,6 @@
 local Types = require(script.Parent.Parent.Types)
 
-type Reducer<State, Action> = Types.RoduxReducer<State, Action>
+export type Reducer<State, Action> = Types.RoduxReducer<State, Action>
 type AnyAction = Types.RoduxAnyAction
 
 -- Creates a composite reducer from a map of keys and sub-reducers.

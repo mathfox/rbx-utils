@@ -2,6 +2,7 @@ local indent = "    "
 
 local function prettyPrint(value, indentLevel)
 	indentLevel = indentLevel or 0
+
 	local output = {}
 
 	if typeof(value) == "table" then
