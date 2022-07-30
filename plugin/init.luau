@@ -55,8 +55,8 @@ for _, child in ServerStorage:GetChildren() do
 end
 
 local NEW_LINE_PATTERN = "[^\r\n]+"
-local SYNCED = "\n-- This file is the one @synced by Rojo\n"
-local OBSERVED_POSTFIX = "-- This file is currently @observed by RbxUtils\n"
+local SYNCED = "\n-- This file is the one @synced by Rojo"
+local OBSERVED_POSTFIX = "-- This file is currently @observed by RbxUtils"
 
 local function updateSource(source: string, blocks: { [string]: boolean })
 	local split = {}
