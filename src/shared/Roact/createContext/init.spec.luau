@@ -26,18 +26,6 @@ return function()
 		expect(type(context)).to.equal("table")
 	end)
 
-	it("should throw on attempt to modify the returned table", function()
-		local context = createContext("Test")
-
-		expect(function()
-			context.new = {}
-		end).to.throw()
-
-		expect(function()
-			setmetatable(context, {})
-		end).to.throw()
-	end)
-
 	it("should contain a Provider and a Consumer", function()
 		local context = createContext("Test")
 		expect(context.Provider).to.be.ok()
@@ -421,5 +409,17 @@ return function()
 
 		robloxReconciler.unmountVirtualNode(node)
 		parent:Destroy()
+	end)
+
+	it("should throw on attempt to modify the returned table", function()
+		local context = createContext("Test")
+
+		expect(function()
+			context.new = {}
+		end).to.throw()
+
+		expect(function()
+			setmetatable(context, {})
+		end).to.throw()
 	end)
 end

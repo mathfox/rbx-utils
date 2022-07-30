@@ -8,9 +8,7 @@ local Component = require(script.Parent.Component)
 
 type Context = Types.RoactContext
 
---[[
-	Construct the value that is assigned to Roact's context storage.
-]]
+-- Construct the value that is assigned to Roact's context storage.
 local function createContextEntry(currentValue)
 	return {
 		value = currentValue,
@@ -28,7 +26,7 @@ local function createProvider(context)
 
 	function Provider:willUpdate(nextProps)
 		-- If the provided value changed, immediately update the context entry.
-		--
+
 		-- During this update, any components that are reachable will receive
 		-- this updated value at the same time as any props and state updates
 		-- that are being applied.
@@ -147,10 +145,15 @@ end
 local function createContext(defaultValue): Context
 	local context = Context.new(defaultValue)
 
-	return table.freeze({
+	local new = {
 		Provider = createProvider(context),
 		Consumer = createConsumer(context),
-	})
+	}
+
+	--@block:dev:2
+	table.freeze(new)
+
+	return new
 end
 
 return createContext

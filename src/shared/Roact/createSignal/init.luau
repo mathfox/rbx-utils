@@ -67,10 +67,15 @@ local function createSignal()
 		end
 	end
 
-	return {
+	local signal = {
 		subscribe = subscribe,
 		fire = fire,
 	}
+
+	--@block:dev:2
+	table.freeze(signal)
+
+	return signal
 end
 
 return createSignal

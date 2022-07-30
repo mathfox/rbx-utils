@@ -1,6 +1,10 @@
 return function()
 	local createSpy = require(script.Parent)
 
+	it("should expose a function", function()
+		expect(createSpy).to.be.a("function")
+	end)
+
 	describe("createSpy", function()
 		it("should create spies", function()
 			local spy = createSpy(function() end)

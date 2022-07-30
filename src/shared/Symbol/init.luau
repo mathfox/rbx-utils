@@ -23,10 +23,10 @@ local function SymbolConstructor(name: string?): Symbol
 	}
 
 	setmetatable(symbol, symbolMetatable)
-	--@block:dev:start
+
+	--@block:dev:3
 	table.freeze(symbolMetatable)
 	table.freeze(symbol)
-	--@block:dev:end
 
 	return symbol
 end

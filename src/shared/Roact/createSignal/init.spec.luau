@@ -1,7 +1,11 @@
 return function()
 	local createSpy = require(script.Parent.Parent.createSpy)
-   
+
 	local createSignal = require(script.Parent)
+
+	it("should expose a function", function()
+		expect(createSignal).to.be.a("function")
+	end)
 
 	it("should fire subscribers and disconnect them", function()
 		local signal = createSignal()
@@ -150,5 +154,21 @@ return function()
 		disconnect1()
 		signal:fire(a)
 		expect(spyA.callCount).to.equal(2)
+	end)
+
+	it("should throw an error on attempt to modify the signal", function()
+		local signal = createSignal()
+
+		expect(function()
+			signal._ = {}
+		end).to.throw()
+
+		expect(function()
+			setmetatable(signal, {})
+		end).to.throw()
+	end)
+
+	it("should not contain a metatable", function()
+		expect(getmetatable(createSignal())).to.equal(nil)
 	end)
 end

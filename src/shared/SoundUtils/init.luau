@@ -2,8 +2,8 @@ local SoundUtils = {
 	promiseAllSoundsLoaded = require(script.promiseAllSoundsLoaded),
 	promiseSoundLoaded = require(script.promiseSoundLoaded),
 }
---@block:dev:start
+
+--@block:dev:2
 table.freeze(SoundUtils)
---@block:dev:end
 
 return SoundUtils

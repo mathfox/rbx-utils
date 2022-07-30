@@ -3,8 +3,7 @@ local StarterGuiUtils = {
 	setCoreGuisEnabled = require(script.setCoreGuisEnabled),
 }
 
---@block:dev:start
+--@block:dev:2
 table.freeze(StarterGuiUtils)
---@block:dev:start
 
 return StarterGuiUtils

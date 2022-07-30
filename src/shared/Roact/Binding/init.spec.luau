@@ -20,6 +20,18 @@ return function()
 			update("foo")
 			expect(tostring(binding)).to.equal("RoactBinding(foo)")
 		end)
+
+		it("should throw an error on attempt to modify returned binding", function()
+			local binding = Binding.create(1)
+
+			expect(function()
+				binding._ = {}
+			end).to.throw()
+
+			expect(function()
+				setmetatable(binding, {})
+			end).to.throw()
+		end)
 	end)
 
 	describe("Binding object", function()
@@ -242,28 +254,20 @@ return function()
 		end)
 
 		it("should throw when a non-table value is passed", function()
-			GlobalConfig.scoped({
-				typeChecks = true,
-			}, function()
-				expect(function()
-					Binding.join("hi")
-				end).to.throw()
-			end)
+			expect(function()
+				Binding.join("hi")
+			end).to.throw()
 		end)
 
 		it("should throw when a non-binding value is passed via table", function()
-			GlobalConfig.scoped({
-				typeChecks = true,
-			}, function()
-				expect(function()
-					local binding = Binding.create(123)
+			expect(function()
+				local binding = Binding.create(123)
 
-					Binding.join({
-						binding,
-						"abcde",
-					})
-				end).to.throw()
-			end)
+				Binding.join({
+					binding,
+					"abcde",
+				})
+			end).to.throw()
 		end)
 	end)
 end

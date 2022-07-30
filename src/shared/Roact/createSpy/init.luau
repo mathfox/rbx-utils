@@ -14,7 +14,7 @@ local function createSpy(inner)
 	self.values = {}
 	self.valuesLength = 0
 	self.value = function(...)
-		self.callCount = self.callCount + 1
+		self.callCount += 1
 		self.values = { ... }
 		self.valuesLength = select("#", ...)
 

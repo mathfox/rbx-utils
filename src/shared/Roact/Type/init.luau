@@ -29,7 +29,7 @@ addType("VirtualNode")
 addType("VirtualTree")
 
 function TypeInternal.of(value)
-	return if typeof(value) ~= "table" then nil else value[Type]
+	return if type(value) ~= "table" then nil else value[Type]
 end
 
 local TypeMetatable = {
@@ -41,9 +41,9 @@ local TypeMetatable = {
 
 setmetatable(Type, TypeMetatable)
 
---@block:dev:start
+--@block:dev:4
+table.freeze(TypeInternal)
 table.freeze(TypeMetatable)
 table.freeze(Type)
---@block:dev:end
 
 return Type

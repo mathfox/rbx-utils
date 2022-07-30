@@ -30,10 +30,9 @@ local function createRef()
 
 	setmetatable(ref, refMetatable)
 
-	--@block:dev:start
+	--@block:dev:3
 	table.freeze(refMetatable)
 	table.freeze(ref)
-	--@block:dev:end
 
 	return ref
 end

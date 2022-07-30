@@ -1,3 +1,4 @@
+--@block:dev:2
 -- reference: https://doc.rust-lang.org/std/option/enum.Option.html
 
 local Types = require(script.Parent.Types)
@@ -47,7 +48,16 @@ function Option:uwrapOrElse<T>(f: () -> T)
 end
 
 function Option:map<T, U>(f: (T) -> U)
-	return if self == None then self :: None else table.freeze(setmetatable({ _v = f(self._v) }, Some)) :: Some<U>
+	if self == None then
+		return self :: None
+	end
+
+	local some = setmetatable({ _v = f(self._v) }, Some) :: Some<U>
+
+	--@block:dev:2
+	table.freeze(some)
+
+	return some
 end
 
 function Option:inspect<T>(f: (T) -> ())
@@ -72,6 +82,7 @@ function Option:okOrElse(err)
 	return if self == None then require(script.Parent.Result).Err(err()) else require(script.Parent.Result).Ok(self._v)
 end
 
+--@block:dev:1
 -- reference: https://doc.rust-lang.org/std/option/enum.Option.html#method.and
 function Option:andRes<U>(optb: Option<U>)
 	return if self == None then self :: None else optb
@@ -85,6 +96,7 @@ function Option:filter<T>(predicate: (T) -> boolean)
 	return if self == None then self :: None else if predicate(self._v :: T) then self else None :: None
 end
 
+--@block:dev:1
 -- reference: https://doc.rust-lang.org/std/option/enum.Option.html#method.or
 function Option:orRes<T>(optb: Option<T>)
 	return if self == None then optb else self :: None
@@ -106,17 +118,21 @@ function Option:match<T, U...>(onSome: (T) -> U..., onNone: () -> U...)
 	return if self == None then onNone() else onSome(self._v)
 end
 
+--@block:dev:2
 table.freeze(Option)
 
-table.freeze(setmetatable(
-	None,
-	table.freeze({
-		__index = Option,
-		__tostring = function()
-			return "Option<_>"
-		end,
-	})
-))
+local NoneMetatable = {
+	__index = Option,
+	__tostring = function()
+		return "Option<_>"
+	end,
+}
+
+setmetatable(None, NoneMetatable)
+
+--@block:dev:3
+table.freeze(NoneMetatable)
+table.freeze(None)
 
 Some.__index = Option
 
@@ -128,19 +144,23 @@ function Some:__eq(v)
 	return type(v) == "table" and getmetatable(v) == Some and v == self._v
 end
 
+--@block:dev:2
 table.freeze(Some)
 
 local OptionExport = {
 	Some = function<T>(v: T): Some<T>
-		return table.freeze(setmetatable({ _v = v }, Some))
+		local some = setmetatable({ _v = v }, Some)
+
+		--@block:dev:2
+		table.freeze(some)
+
+		return some
 	end,
 
 	None = None,
 }
 
+--@block:dev:2
 table.freeze(OptionExport)
 
-return OptionExport :: {
-	None: None,
-	Some: <T>(T) -> Some<T>,
-}
+return OptionExport

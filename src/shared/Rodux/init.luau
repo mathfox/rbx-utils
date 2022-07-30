@@ -9,8 +9,7 @@ local Rodux = {
 	thunkMiddleware = require(script.thunkMiddleware),
 }
 
---@block:dev:start
+--@block:dev:2
 table.freeze(Rodux)
---@block:dev:end
 
 return Rodux

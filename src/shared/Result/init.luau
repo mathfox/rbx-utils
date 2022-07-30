@@ -1,3 +1,4 @@
+--@block:dev:2
 -- reference: https://doc.rust-lang.org/std/result/enum.Result.html#
 
 local Types = require(script.Parent.Types)
@@ -35,7 +36,16 @@ function Result:err<E>()
 end
 
 function Result:map<T, E, U>(op: (T) -> U)
-	return if getmetatable(self) == Err then self :: Result<T, E> else table.freeze(setmetatable({ _v = op(self._v :: T) }, Ok)) :: Result<U, E>
+	if getmetatable(self) == Err then
+		return self :: Result<T, E>
+	end
+
+	local ok = setmetatable({ _v = op(self._v :: T) }, Ok) :: Result<U, E>
+
+	--@block:dev:2
+	table.freeze(ok)
+
+	return ok
 end
 
 function Result:mapOr<T, U>(default: U, f: (T) -> U)
@@ -47,7 +57,16 @@ function Result:mapOrElse<T, E, U>(default: (E) -> U, f: (T) -> U)
 end
 
 function Result:mapErr<T, E, F>(op: (E) -> F)
-	return if getmetatable(self) == Ok then self :: Result<T, E> else table.freeze(setmetatable({ _v = op(self._v :: E) }, Err)) :: Result<T, F>
+	if getmetatable(self) == Ok then
+		return self :: Result<T, E>
+	end
+
+	local err = setmetatable({ _v = op(self._v :: E) }, Err) :: Result<T, F>
+
+	--@block:dev:2
+	table.freeze(err)
+
+	return err
 end
 
 function Result:inspect<T>(f: (T) -> ())
@@ -98,6 +117,7 @@ function Result:unwrapErr()
 	return self._v
 end
 
+--@block:dev:1
 -- original naming: https://doc.rust-lang.org/std/result/enum.Result.html#method.and
 function Result:andRes<T, E, U>(res: Result<U, E>)
 	return if getmetatable(self) == Ok then res else self :: Result<T, E>
@@ -107,6 +127,7 @@ function Result:andThen<T, E, U>(op: (T) -> Result<U, E>)
 	return if getmetatable(self) == Err then self :: Result<T, E> else op(self._v :: T) :: Result<U, E>
 end
 
+--@block:dev:1
 -- original naming: https://doc.rust-lang.org/std/result/enum.Result.html#method.or
 function Result:orRes<T, E, F>(res: Result<T, F>)
 	return if getmetatable(self) == Err then res else self :: Result<T, E>
@@ -136,6 +157,7 @@ function Result:match<T, E>(onOk: (T) -> (), onErr: (E) -> ())
 	return if getmetatable(self) == Ok then onOk(self._v :: T) else onErr(self._v :: E)
 end
 
+--@block:dev:2
 table.freeze(Result)
 
 Ok.__index = Result
@@ -158,23 +180,31 @@ function Err:__eq(value)
 	return type(value) == "table" and getmetatable(value) == Err and value._v == self._v
 end
 
--- make sure no more edits could be applied
+--@block:dev:3
 table.freeze(Ok)
 table.freeze(Err)
 
 local ResultExport = {
-	Ok = function(value)
-		return table.freeze(setmetatable({ _v = value }, Ok))
+	Ok = function<T>(value): Ok<T>
+		local ok = setmetatable({ _v = value }, Ok)
+
+		--@block:dev:2
+		table.freeze(ok)
+
+		return ok
 	end,
 
-	Err = function(err)
-		return table.freeze(setmetatable({ _v = err }, Err))
+	Err = function<E>(err): Err<E>
+		local err = setmetatable({ _v = err }, Err)
+
+		--@block:dev:2
+		table.freeze(err)
+
+		return err
 	end,
 }
 
+--@block:dev:2
 table.freeze(ResultExport)
 
-return ResultExport :: {
-	Ok: <T>(T) -> Result<T, nil>,
-	Err: <E>(E) -> Result<nil, E>,
-}
+return ResultExport

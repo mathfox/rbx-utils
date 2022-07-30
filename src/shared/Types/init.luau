@@ -1,3 +1,4 @@
+--@block:dev:1
 -- the table returned by the table.pack function: https://create.roblox.com/docs/reference/engine/libraries/table#pack
 export type PackedValues<T> = { n: number, [number]: T }
 
@@ -24,6 +25,7 @@ export type Enumerator<T = string> = typeof(setmetatable(
 	}
 ))
 
+--@block:dev:1
 -- reference: https://doc.rust-lang.org/std/result/enum.Result.html#
 type ResultImpl<T, E> = {
 	__tostring: () -> string,
@@ -53,6 +55,7 @@ export type Result<T, E> = typeof(setmetatable({}, {} :: ResultImpl<T, E>))
 export type Ok<T> = Result<T, nil>
 export type Err<E> = Result<nil, E>
 
+--@block:dev:1
 -- reference: https://doc.rust-lang.org/std/option/enum.Option.html
 type OptionImpl<T> = {
 	__tostring: () -> string,
@@ -105,6 +108,7 @@ export type Signal<T... = ...any> = typeof(setmetatable(
 ))
 
 export type PromiseExecutor<T...> = (resolve: (T...) -> (), reject: (...any) -> (), onCancel: (cancellationHook: (() -> ())?) -> boolean) -> ()
+--@block:dev:1
 -- reference: https://eryn.io/roblox-lua-promise/api/Promise
 export type Promise<T...> = {
 	andThen: <R...>(self: Promise<T...>, successHandler: (T...) -> R..., failureHandler: (...any) -> R...) -> Promise<R...>,
@@ -361,5 +365,6 @@ export type RoactContext = {
 	Consumer: RoactContextConsumer,
 	Provider: RoactContextProvider,
 }
+export type RoactRef = {}
 
 return nil

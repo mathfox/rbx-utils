@@ -70,9 +70,7 @@ local InstanceCacheExport = {
 	end,
 }
 
+--@block:dev:2
 table.freeze(InstanceCacheExport)
 
-return InstanceCacheExport :: {
-	is: (object: any) -> boolean,
-	new: <I>(params: InstanceCacheParams<I>) -> InstanceCache<I>,
-}
+return InstanceCacheExport
