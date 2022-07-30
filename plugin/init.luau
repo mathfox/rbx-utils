@@ -55,6 +55,8 @@ for _, child in ServerStorage:GetChildren() do
 end
 
 local NEW_LINE_PATTERN = "[^\r\n]+"
+local SYNCED = "\n-- This file is the one @synced by Rojo\n"
+local OBSERVED_POSTFIX = "-- This file is currently @observed by RbxUtils\n"
 
 local function updateSource(source: string, blocks: { [string]: boolean })
 	local split = {}
@@ -63,7 +65,7 @@ local function updateSource(source: string, blocks: { [string]: boolean })
 		table.insert(split, if line == "\r" then "" else table.insert(split, line:match(NEW_LINE_PATTERN) or ""))
 	end
 
-	local newSource = "-- This file is currently @observed by RbxUtils\n"
+	local newSource = ""
 
 	local function runSourceAppend(index: number)
 		for startIndex = index, #split do
@@ -109,10 +111,10 @@ local function updateSource(source: string, blocks: { [string]: boolean })
 
 	runSourceAppend(1)
 
+	newSource ..= OBSERVED_POSTFIX
+
 	return newSource
 end
-
-local SYNCED = "-- This file is the one @synced by Rojo\n"
 
 local function onValueChange(folder: Folder?)
 	if folder then
@@ -134,7 +136,7 @@ local function onValueChange(folder: Folder?)
 							INSTANCE_TO_SOURCE_MAP[child] = nil
 						end)
 
-						source = SYNCED .. child.Source
+						source = child.Source .. SYNCED
 						INSTANCE_TO_SOURCE_MAP[child] = source
 						child.Source = updateSource(source, attributes)
 
@@ -142,10 +144,8 @@ local function onValueChange(folder: Folder?)
 							if not child.Source:find("@observed") then
 								local newSource = child.Source
 								if not newSource:find("@synced") then
-									newSource = SYNCED .. newSource
-
-									INSTANCE_TO_SOURCE_MAP[child] = newSource
-									child.Source = updateSource(newSource, attributes)
+									INSTANCE_TO_SOURCE_MAP[child] = newSource .. SYNCED
+									child.Source = updateSource(newSource .. SYNCED, attributes)
 								end
 							end
 						end)
