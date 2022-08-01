@@ -35,4 +35,7 @@ function PureComponent:shouldUpdate(newProps, newState)
 	return false
 end
 
+--@block:dev:2
+table.freeze(PureComponent)
+
 return PureComponent

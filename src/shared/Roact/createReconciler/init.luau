@@ -6,8 +6,6 @@ local ElementUtils = require(script.Parent.ElementUtils)
 local ElementKind = require(script.Parent.ElementKind)
 local Type = require(script.Parent.Type)
 
-local config = require(script.Parent.GlobalConfig).get()
-
 local InternalData = Symbol("InternalData")
 
 --[[
@@ -68,9 +66,8 @@ local function createReconciler(renderer)
 		updated children given as elements.
 	]]
 	local function updateChildren(virtualNode, hostParent, newChildElements)
-		if config.internalTypeChecks then
-			internalAssert(Type.of(virtualNode) == Type.VirtualNode, "Expected arg #1 to be of type VirtualNode")
-		end
+		--@block-Roact:internalTypeChecks:2
+		internalAssert(Type.of(virtualNode) == Type.VirtualNode, "Expected arg #1 to be of type VirtualNode")
 
 		virtualNode.updateChildrenCount = virtualNode.updateChildrenCount + 1
 
@@ -150,9 +147,8 @@ local function createReconciler(renderer)
 		Unmounts the given virtual node and releases any held resources.
 	]]
 	function unmountVirtualNode(virtualNode)
-		if config.internalTypeChecks then
-			internalAssert(Type.of(virtualNode) == Type.VirtualNode, "Expected arg #1 to be of type VirtualNode")
-		end
+		--@block-Roact:internalTypeChecks:2
+		internalAssert(Type.of(virtualNode) == Type.VirtualNode, "Expected arg #1 to be of type VirtualNode")
 
 		virtualNode.wasUnmounted = true
 
@@ -228,9 +224,8 @@ local function createReconciler(renderer)
 		a warning to the user.
 	]]
 	function updateVirtualNode(virtualNode, newElement, newState)
-		if config.internalTypeChecks then
-			internalAssert(Type.of(virtualNode) == Type.VirtualNode, "Expected arg #1 to be of type VirtualNode")
-		end
+		--@block-Roact:internalTypeChecks:2
+		internalAssert(Type.of(virtualNode) == Type.VirtualNode, "Expected arg #1 to be of type VirtualNode")
 
 		--@block:dev:start
 		if Type.of(newElement) ~= Type.Element and type(newElement) ~= "boolean" and newElement ~= nil then
@@ -285,11 +280,10 @@ local function createReconciler(renderer)
 		Constructs a new virtual node but not does mount it.
 	]]
 	local function createVirtualNode(element, hostParent, hostKey, context, legacyContext)
-		if config.internalTypeChecks then
-			internalAssert(renderer.isHostObject(hostParent) or hostParent == nil, "Expected arg #2 to be a host object")
-			internalAssert(type(context) == "table" or context == nil, "Expected arg #4 to be of type table or nil")
-			internalAssert(type(legacyContext) == "table" or legacyContext == nil, "Expected arg #5 to be of type table or nil")
-		end
+		--@block-Roact:internalTypeChecks:4
+		internalAssert(renderer.isHostObject(hostParent) or hostParent == nil, "Expected arg #2 to be a host object")
+		internalAssert(type(context) == "table" or context == nil, "Expected arg #4 to be of type table or nil")
+		internalAssert(type(legacyContext) == "table" or legacyContext == nil, "Expected arg #5 to be of type table or nil")
 
 		--@block:dev:start
 		if hostKey == nil then
@@ -360,10 +354,9 @@ local function createReconciler(renderer)
 		the tree.
 	]]
 	function mountVirtualNode(element, hostParent, hostKey, context, legacyContext)
-		if config.internalTypeChecks then
-			internalAssert(renderer.isHostObject(hostParent) or hostParent == nil, "Expected arg #2 to be a host object")
-			internalAssert(type(legacyContext) == "table" or legacyContext == nil, "Expected arg #5 to be of type table or nil")
-		end
+		--@block-Roact:internalTypeChecks:3
+		internalAssert(renderer.isHostObject(hostParent) or hostParent == nil, "Expected arg #2 to be a host object")
+		internalAssert(type(legacyContext) == "table" or legacyContext == nil, "Expected arg #5 to be of type table or nil")
 
 		--@block:dev:start
 		if hostKey == nil then

@@ -1,3 +1,5 @@
+--!strict
+
 --@block:dev:1
 -- the table returned by the table.pack function: https://create.roblox.com/docs/reference/engine/libraries/table#pack
 export type PackedValues<T> = { n: number, [number]: T }
@@ -289,6 +291,20 @@ export type RoduxAction<Type = any> = { type: Type, [any]: any }
 export type RoduxAnyAction = RoduxAction
 export type RoduxActionCreator<Type, Action, Args...> = typeof(setmetatable({} :: { name: Type }, {} :: { __call: (any, Args...) -> Action & { type: Type } }))
 
+export type RoactElementImpl = {
+	-- FIXME: ability to represent key of table type
+	-- [Type]: Symbol,
+	-- [ElementKind]: Symbol,
+
+	[any]: Symbol,
+}
+export type RoactElement = RoactElementImpl & {
+	component: string | RoactFunctionComponent | RoactStatefulComponent,
+	props: { [any]: any },
+}
+export type RoactFragment = RoactElementImpl & {
+	elements: { [any]: RoactElementImpl },
+}
 -- roact related types, reference: https://roblox.github.io/roact/
 export type RoactFunctionComponent = ({ [any]: any }) -> RoactElement
 type RoactStatefulComponentImpl = {
@@ -331,14 +347,6 @@ export type RoactStatefulComponent = typeof(setmetatable(
 	},
 	{} :: RoactStatefulComponentImpl
 ))
-export type RoactElement = {
-	props: { [any]: any },
-	component: string | RoactFunctionComponent | RoactStatefulComponent | RoactFragment | RoactPortal,
-	source: string?,
-}
-export type RoactFragment = {
-	elements: { [any]: RoactElement },
-}
 export type RoactPortal = Symbol
 -- TODO: add generic render value type
 type RoactContextConsumer = typeof(setmetatable(

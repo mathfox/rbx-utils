@@ -1,3 +1,4 @@
+--@block:dev:1
 -- reference: https://developer.roblox.com/en-us/api-reference/callback/MarketplaceService/ProcessReceipt
 export type ReceiptInfo = {
 	PlayerId: number,
@@ -9,6 +10,7 @@ export type ReceiptInfo = {
 	CurrencySpent: number,
 }
 
+--@block:dev:1
 -- reference: https://developer.roblox.com/en-us/api-reference/function/PhysicsService/GetCollisionGroups
 export type CollisionGroupConfigurationTable = {
 	id: number,

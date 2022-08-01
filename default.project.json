@@ -1,8 +1,5 @@
 {
    "name": "rbx-utils",
-   "globIgnorePaths": [
-      "**/*.spec.lua"
-   ],
    "tree": {
       "$className": "DataModel",
       "ReplicatedStorage": {
@@ -16,7 +13,20 @@
             "$properties": {
                "Attributes": {
                   "dev": {
-                     "Bool": false
+                     "Bool": true
+                  }
+               }
+            },
+            "Roact": {
+               "$className": "Folder",
+               "$properties": {
+                  "Attributes": {
+                     "internalTypeChecks": {
+                        "Bool": true
+                     },
+                     "elementTracing": {
+                        "Bool": true
+                     }
                   }
                }
             }

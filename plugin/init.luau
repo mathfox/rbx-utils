@@ -58,7 +58,7 @@ local NEW_LINE_PATTERN = "[^\r\n]+"
 local SYNCED = "\n-- This file is the one @synced by Rojo"
 local OBSERVED_POSTFIX = "-- This file is currently @observed by RbxUtils"
 
-local function updateSource(source: string, blocks: { [string]: boolean })
+local function updateSource(source: string, folder: Folder)
 	local split = {}
 
 	for _, line in source:split("\n") do
@@ -70,13 +70,35 @@ local function updateSource(source: string, blocks: { [string]: boolean })
 	local function runSourceAppend(index: number)
 		for startIndex = index, #split do
 			local startStr = split[startIndex]:gsub("\t", ""):gsub(" ", "")
-			local blockStartMatch = startStr:match("--@block:[%a]+:[%a%d]+")
+			local blockStartMatch = startStr:match("--@block[-%a]*:[%a]+:[%a%d]+")
 			if blockStartMatch then
 				local blockSplit = blockStartMatch:split(":")
 				local blockName = blockSplit[2]
-				local blockAction = blockSplit[3]
 
-				if blocks[blockName] then
+				local shouldRemoveBlock = false
+
+				-- basically an array indicating the path
+				local location = blockStartMatch:match("[%a]+-[-%a]+")
+				if location then
+					location = location:split("-")
+
+					local currentPath = folder
+
+					for pathDepth = 2, #location do
+						currentPath = currentPath:FindFirstChild(location[pathDepth])
+						if not currentPath then
+							break
+						end
+					end
+
+					shouldRemoveBlock = if currentPath then currentPath:GetAttribute(blockName) else false
+				else
+					shouldRemoveBlock = folder:GetAttribute(blockName)
+				end
+
+				if shouldRemoveBlock then
+					local blockAction = blockSplit[3]
+
 					if blockAction == "start" then
 						local blockEndStr = ("--@block:%s:end"):format(blockName)
 
@@ -118,8 +140,6 @@ end
 
 local function onValueChange(folder: Folder?)
 	if folder then
-		local attributes = folder:GetAttributes()
-
 		for _, container in CONTAINERS do
 			for _, child in ReplicatedStorage:GetDescendants() do
 				if child:IsA("LuaSourceContainer") then
@@ -138,14 +158,14 @@ local function onValueChange(folder: Folder?)
 
 						source = child.Source .. SYNCED
 						INSTANCE_TO_SOURCE_MAP[child] = source
-						child.Source = updateSource(source, attributes)
+						child.Source = updateSource(source, folder)
 
 						sourceChangedConnection = child:GetPropertyChangedSignal("Source"):Connect(function()
 							if not child.Source:find("@observed") then
 								local newSource = child.Source
 								if not newSource:find("@synced") then
 									INSTANCE_TO_SOURCE_MAP[child] = newSource .. SYNCED
-									child.Source = updateSource(newSource .. SYNCED, attributes)
+									child.Source = updateSource(newSource .. SYNCED, folder)
 								end
 							end
 						end)

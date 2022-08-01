@@ -12,18 +12,15 @@
 		disconnect()
 ]]
 
-local config = require(script.Parent.GlobalConfig).get()
-
 local function createSignal()
 	local connections = {}
 	local suspendedConnections = {}
 	local firing = false
 
 	local function subscribe(_, callback)
-		if config.internalTypeChecks then
-			if typeof(callback) ~= "function" then
-				error("Can only subscribe to signals with a function.", 2)
-			end
+		--@block-Roact:internalTypeChecks:4
+		if typeof(callback) ~= "function" then
+			error("Can only subscribe to signals with a function.", 2)
 		end
 
 		local connection = {
