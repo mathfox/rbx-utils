@@ -45,7 +45,7 @@ function BindingInternalApi.create(initialValue)
 		changeSignal = createSignal(),
 	}
 
-	function impl.subscribe(callback)
+	function impl.subscribe(callback: () -> ())
 		return impl.changeSignal:subscribe(callback)
 	end
 

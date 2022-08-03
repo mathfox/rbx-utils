@@ -1,3 +1,4 @@
+--@block:dev:2
 --!strict
 
 --@block:dev:1
@@ -133,6 +134,7 @@ export type Promise<T...> = {
 }
 
 type JanitorIndex = boolean | number | string | (...any) -> ...any | { [any]: any } | thread
+--@block:dev:1
 -- * this type is not supposed to be used externally
 export type JanitorImpl = {
 	__index: JanitorImpl,
@@ -269,6 +271,7 @@ export type Friend = {
 	IsOnline: boolean,
 }
 
+--@block:dev:4
 -- rodux related types, reference: https://roblox.github.io/rodux/
 -- some types references:
 -- https://github.com/Roblox/rodux/commit/07f634e1dffd173f9e160fed40e1f03b9d17e619
@@ -291,7 +294,10 @@ export type RoduxAction<Type = any> = { type: Type, [any]: any }
 export type RoduxAnyAction = RoduxAction
 export type RoduxActionCreator<Type, Action, Args...> = typeof(setmetatable({} :: { name: Type }, {} :: { __call: (any, Args...) -> Action & { type: Type } }))
 
+--@block:dev:1
+-- roact related types, reference: https://roblox.github.io/roact/
 export type RoactElementImpl = {
+	--@block:dev:4
 	-- FIXME: ability to represent key of table type
 	-- [Type]: Symbol,
 	-- [ElementKind]: Symbol,
@@ -305,14 +311,15 @@ export type RoactElement = RoactElementImpl & {
 export type RoactFragment = RoactElementImpl & {
 	elements: { [any]: RoactElementImpl },
 }
--- roact related types, reference: https://roblox.github.io/roact/
 export type RoactFunctionComponent = ({ [any]: any }) -> RoactElement
 type RoactStatefulComponentImpl = {
 	__index: RoactStatefulComponentImpl,
 	__tostring: (self: RoactStatefulComponent) -> string,
 
+	--@block:dev:1
 	-- reference: https://roblox.github.io/roact/api-reference/#setstate
 	setState: (self: RoactStatefulComponent, mapState: { [any]: any } | (previousState: { [any]: any }, props: { [any]: any }) -> ()) -> (),
+	--@block:dev:1
 	-- reference: https://roblox.github.io/roact/api-reference/#getelementtraceback
 	getElementTraceback: (self: RoactStatefulComponent) -> string?,
 
@@ -348,6 +355,7 @@ export type RoactStatefulComponent = typeof(setmetatable(
 	{} :: RoactStatefulComponentImpl
 ))
 export type RoactPortal = Symbol
+--@block:dev:1
 -- TODO: add generic render value type
 type RoactContextConsumer = typeof(setmetatable(
 	{} :: {
@@ -374,5 +382,19 @@ export type RoactContext = {
 	Provider: RoactContextProvider,
 }
 export type RoactRef = {}
+export type RoactBindingImpl<T> = {
+	__index: {
+		getValue: () -> T,
+		map: (predicate: (T) -> T) -> RoactBinding,
+	},
+	__tostring: () -> string,
+}
+export type RoactBinding<Impl> = typeof(setmetatable({} :: {
+	--@block:dev:3
+	-- FIXME: proper type of
+	-- [Type]: Symbol
+	-- [BindingImpl]: Impl
+	[any]: Symbol,
+}, {} :: RoactBindingImpl))
 
 return nil

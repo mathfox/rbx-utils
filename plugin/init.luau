@@ -96,6 +96,8 @@ local function updateSource(source: string, folder: Folder)
 					shouldRemoveBlock = folder:GetAttribute(blockName)
 				end
 
+				newSource ..= "\n"
+
 				if shouldRemoveBlock then
 					local blockAction = blockSplit[3]
 
@@ -108,6 +110,8 @@ local function updateSource(source: string, folder: Folder)
 								runSourceAppend(endIndex + 1)
 
 								break
+							else
+								newSource ..= "\n"
 							end
 						end
 
@@ -118,6 +122,8 @@ local function updateSource(source: string, folder: Folder)
 						if linesAmount and linesAmount ~= 0 then
 							local nextIndex = startIndex + 1 + linesAmount
 							if nextIndex < #split then
+								newSource ..= string.rep("\n", linesAmount)
+
 								runSourceAppend(nextIndex)
 							end
 
