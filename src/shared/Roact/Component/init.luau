@@ -7,8 +7,6 @@ local invalidSetStateMessages = require(script.Parent.invalidSetStateMessages)
 local internalAssert = require(script.Parent.internalAssert)
 local Type = require(script.Parent.Type)
 
-local config = require(script.Parent.GlobalConfig).get()
-
 type StatefulComponent = Types.RoactStatefulComponent
 
 --[[
@@ -234,12 +232,11 @@ end
 	error.
 ]]
 function Component:__validateProps(props)
-	if not config.propValidation then
-		return
-	end
+	--@block-Roact:propValidation:3
+   --stylua: ignore
+   if true then return end
 
 	local validator = self[InternalData].componentClass.validateProps
-
 	if validator == nil then
 		return
 	end

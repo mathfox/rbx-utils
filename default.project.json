@@ -13,7 +13,7 @@
             "$properties": {
                "Attributes": {
                   "dev": {
-                     "Bool": true
+                     "Bool": false
                   }
                }
             },
@@ -22,10 +22,10 @@
                "$properties": {
                   "Attributes": {
                      "internalTypeChecks": {
-                        "Bool": true
+                        "Bool": false
                      },
                      "elementTracing": {
-                        "Bool": true
+                        "Bool": false
                      }
                   }
                }

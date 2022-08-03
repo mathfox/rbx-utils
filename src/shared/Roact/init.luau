@@ -1,10 +1,7 @@
---[[
-	Packages up the internals of Roact and exposes a public API for it.
-]]
+--	Packages up the internals of Roact and exposes a public API for it.
 
 local createReconciler = require(script.createReconciler)
 local RobloxRenderer = require(script.RobloxRenderer)
-local GlobalConfig = require(script.GlobalConfig)
 local Binding = require(script.Binding)
 
 local robloxReconciler = createReconciler(RobloxRenderer)
@@ -30,8 +27,6 @@ local Roact = {
 	mount = robloxReconciler.mountVirtualTree,
 	unmount = robloxReconciler.unmountVirtualTree,
 	update = robloxReconciler.updateVirtualTree,
-
-	setGlobalConfig = GlobalConfig.set,
 }
 
 --@block:dev:2

@@ -5,7 +5,7 @@ local ServerStorage = game:GetService("ServerStorage")
 local StarterPlayer = game:GetService("StarterPlayer")
 local Players = game:GetService("Players")
 
-local CONTAINERS = { ServerScriptService, workspace, Players, StarterPlayer.StarterPlayerScripts, ReplicatedFirst }
+local CONTAINERS = { ReplicatedStorage, ServerScriptService, workspace, Players, StarterPlayer.StarterPlayerScripts, ReplicatedFirst }
 local INSTANCE_TO_SOURCE_MAP: { [Instance]: string } = {}
 
 local FOLDER_NAME = "IgnoreCodeBlocks"
@@ -140,8 +140,26 @@ end
 
 local function onValueChange(folder: Folder?)
 	if folder then
+		local function attachHandlerRecursive(parent: Folder)
+			parent.AttributeChanged:Connect(function(attribute)
+				for _, container in CONTAINERS do
+					for _, child in container:GetDescendants() do
+						if child:IsA("LuaSourceContainer") and INSTANCE_TO_SOURCE_MAP[child] then
+							child.Source = updateSource(INSTANCE_TO_SOURCE_MAP[child], folder)
+						end
+					end
+				end
+			end)
+
+			for _, child in parent:GetChildren() do
+				attachHandlerRecursive(child)
+			end
+		end
+
+		attachHandlerRecursive(folder)
+
 		for _, container in CONTAINERS do
-			for _, child in ReplicatedStorage:GetDescendants() do
+			for _, child in container:GetDescendants() do
 				if child:IsA("LuaSourceContainer") then
 					local source = INSTANCE_TO_SOURCE_MAP[child]
 					if not source then
