@@ -22,7 +22,7 @@ local function onContainerAdd(container: LuaSourceContainer)
 		local isSynced = false
 
 		for _, token in tokens do
-			if token.type.name == "SINGLE_LINE_COMMENT" or token.type.name == "MULTIPLE_LINE_COMMENT" then
+			if token.type.name == "SINGLE_LINE_COMMENT" then
 				if token.text:match(Constants.postfixes.synced) then
 					isSynced = true
 
@@ -40,66 +40,70 @@ local function onContainerAdd(container: LuaSourceContainer)
 
 					if token.type.name == "SINGLE_LINE_COMMENT" then
 						local blockStartMatch = token.text:match("^%-%-%s?@block[-%a]*:[%a]+:?[%a%d]+")
+						if blockStartMatch then
+							local blockSplit = blockStartMatch:split(":")
+							local blockName = blockSplit[2]
 
-						local blockSplit = blockStartMatch:split(":")
-						local blockName = blockSplit[2]
+							local shouldRemoveBlock = false
 
-						local shouldRemoveBlock = false
+							-- basically an array indicating the path
+							local location = blockStartMatch:match("[%a]+-[-%a]+")
+							if location then
+								location = location:split("-")
 
-						-- basically an array indicating the path
-						local location = blockStartMatch:match("[%a]+-[-%a]+")
-						if location then
-							location = location:split("-")
+								local currentPath = ServerStorage.IgnoreCodeBlocks
 
-							local currentPath = ServerStorage.IgnoreCodeBlocks
-
-							for pathDepth = 2, #location do
-								currentPath = currentPath:FindFirstChild(location[pathDepth])
-								if not currentPath then
-									break
-								end
-							end
-
-							shouldRemoveBlock = if currentPath then currentPath:GetAttribute(blockName) else false
-						else
-							shouldRemoveBlock = ServerStorage.IgnoreCodeBlocks:GetAttribute(blockName)
-						end
-
-						if shouldRemoveBlock then
-							local blockAction = blockSplit[3]
-
-							if blockAction == "start" then
-								local blockEndStr = ("--@block:%s:end"):format(blockName)
-
-								for endIndex = tokenIndex + 1, #tokens do
-									local endToken = tokens[endIndex]
-									if endToken.text == blockEndStr then
-										runAppend(endIndex + 1)
-
+								for pathDepth = 2, #location do
+									currentPath = currentPath:FindFirstChild(location[pathDepth])
+									if not currentPath then
 										break
-									else
-										table.insert(resultTokens, { text = "\n" })
 									end
 								end
 
-								break
+								shouldRemoveBlock = if currentPath then currentPath:GetAttribute(blockName) else false
 							else
-								local linesAmount = tonumber(blockAction)
+								shouldRemoveBlock = ServerStorage.IgnoreCodeBlocks:GetAttribute(blockName)
+							end
 
-								if linesAmount and linesAmount ~= 0 then
-									local nextIndex = startIndex + 1 + linesAmount
-									if nextIndex < #tokens then
-										for _ = 1, linesAmount do
+							if shouldRemoveBlock then
+								local blockAction = blockSplit[3]
+
+								if blockAction == "start" then
+									local blockEndStr = ("--@block:%s:end"):format(blockName)
+
+									for endIndex = tokenIndex + 1, #tokens do
+										local endToken = tokens[endIndex]
+										if endToken.text == blockEndStr then
+											runAppend(endIndex + 1)
+
+											break
+										else
 											table.insert(resultTokens, { text = "\n" })
 										end
-
-										runAppend(nextIndex)
 									end
 
 									break
+								else
+									local linesAmount = tonumber(blockAction)
+
+									if linesAmount and linesAmount ~= 0 then
+										local nextIndex = startIndex + 1 + linesAmount
+										if nextIndex < #tokens then
+											for _ = 1, linesAmount do
+												table.insert(resultTokens, { text = "\n" })
+											end
+
+											runAppend(nextIndex)
+										end
+
+										break
+									end
 								end
 							end
+						else
+							table.insert(resultTokens, token)
 						end
+
 					-- elseif token.type.name == "MULTIPLE_LINE_COMMENT" then
 					else
 						table.insert(resultTokens, token)

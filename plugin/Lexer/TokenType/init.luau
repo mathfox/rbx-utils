@@ -20,7 +20,9 @@ local tokenTypesList = {
 	end),
 
 	TokenType.new("CODE", function(code)
-		return code:match("^[ \t%w%p]+")
+		if not code:match("^%-%-") then
+			return code:match("^[ \t%w%p]+")
+		end
 	end),
 
 	TokenType.new("MULTIPLE_LINE_COMMENT", function(code)
