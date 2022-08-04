@@ -6,6 +6,12 @@
          "$className": "ReplicatedStorage",
          "$path": "src"
       },
+      "ServerScriptService": {
+         "$className": "ServerScriptService",
+         "plugin": {
+            "$path": "plugin"
+         }
+      },
       "ServerStorage": {
          "$className": "ServerStorage",
          "IgnoreCodeBlocks": {
