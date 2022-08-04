@@ -3,7 +3,7 @@ local NumberSequenceUtils = {
 	evaluateNumberSequence = require(script.evaluateNumberSequence),
 }
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(NumberSequenceUtils)
 
 return NumberSequenceUtils

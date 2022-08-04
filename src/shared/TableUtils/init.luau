@@ -21,7 +21,7 @@ local TableUtils = {
 	values = require(script.values),
 }
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(TableUtils)
 
 return TableUtils

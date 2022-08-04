@@ -4,7 +4,7 @@ local PhysicsServiceUtils = {
 	doesCollisionGroupWithNameExist = require(script.doesCollisionGroupWithNameExist),
 }
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(PhysicsServiceUtils)
 
 return PhysicsServiceUtils

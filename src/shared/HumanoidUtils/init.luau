@@ -9,7 +9,7 @@ local HumanoidUtils = {
 	teleportHumanoidToPosition = require(script.teleportHumanoidToPosition),
 }
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(HumanoidUtils)
 
 return HumanoidUtils

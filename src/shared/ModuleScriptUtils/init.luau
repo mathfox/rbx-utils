@@ -5,7 +5,7 @@ local ModuleScriptUtils = {
 	loadDescendantsFilter = require(script.loadDescendantsFilter),
 }
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(ModuleScriptUtils)
 
 return ModuleScriptUtils

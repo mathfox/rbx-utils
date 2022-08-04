@@ -5,7 +5,7 @@ local FunctionUtils = {
 	void = require(script.void),
 }
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(FunctionUtils)
 
 return FunctionUtils
