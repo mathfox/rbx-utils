@@ -8,10 +8,14 @@ export type TokenType = {
 local TokenType = {}
 
 function TokenType.new(name: string, match: (code: string) -> string?): TokenType
-	return {
+	local tokenType = {
 		name = name,
 		match = match,
 	}
+
+	table.freeze(tokenType)
+
+	return tokenType
 end
 
 local tokenTypesList = {
@@ -32,16 +36,11 @@ local tokenTypesList = {
 	TokenType.new("SINGLE_LINE_COMMENT", function(code)
 		local endLineIndex = code:find("[\r\n]")
 		if endLineIndex then
-			local trimmed = code:sub(1, endLineIndex - 1)
-
-			return trimmed:match("^%-%-.*")
+			return code:sub(1, endLineIndex - 1):match("^%-%-.*")
 		else
 			return code:match("^%-%-.*")
 		end
 	end),
-	-- TokenType.new("PREFIX", "^[[-]+[-]+]-(.+)(@block)"),
-	-- TokenType.new("ACTION", ":[%a]+:"),
-	-- TokenType.new("OPTION", ""),
 }
 
 table.freeze(tokenTypesList)

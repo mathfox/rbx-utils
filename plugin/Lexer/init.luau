@@ -7,7 +7,8 @@ type Token = Token.Token
 
 type LexerImpl = {
 	__index: LexerImpl,
-	lexAnalysis: (self: Lexer) -> { Token },
+
+	runAnalysis: (self: Lexer) -> { Token },
 }
 
 export type Lexer = typeof(setmetatable({} :: {
@@ -18,11 +19,11 @@ export type Lexer = typeof(setmetatable({} :: {
 local LexerImpl = {} :: LexerImpl
 LexerImpl.__index = LexerImpl
 
-function LexerImpl:lexAnalysis()
+function LexerImpl:runAnalysis()
 	local tokenList = {}
 
-	while self.pos < #self.code do
-		local hasFoundToken = false
+	while self.pos <= #self.code do
+		local hasMatchedTokenType = false
 
 		for _, tokenType in TokenType.tokenTypesList do
 			local result = tokenType.match(self.code:sub(self.pos))
@@ -31,14 +32,14 @@ function LexerImpl:lexAnalysis()
 
 				self.pos += #result
 
-				hasFoundToken = true
+				hasMatchedTokenType = true
 
 				break
 			end
 		end
 
-		if not hasFoundToken then
-			error("On the position " .. self.pos, 2)
+		if not hasMatchedTokenType then
+			error(("Could not match any TokenType at the %d position"):format(self.pos), 2)
 		end
 	end
 

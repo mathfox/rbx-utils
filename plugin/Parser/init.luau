@@ -11,9 +11,12 @@ type Token = Token.Token
 
 type ParserImpl = {
 	__index: ParserImpl,
-	match: (self: Parser, expected: { TokenType }) -> Token?,
-	require: (self: Parser, expected: { TokenType }) -> Token,
-	parseComments: (self: Parser) -> ExpressionNode,
+
+	match: (self: Parser, expected: TokenType) -> Token?,
+	require: (self: Parser, expected: TokenType) -> Token,
+	parseCode: (self: Parser) -> ExpressionNode,
+	parseExpression: (self: Parser) -> ExpressionNode,
+	parseComment: (self: Parser) -> ExpressionNode,
 }
 
 export type Parser = typeof(setmetatable({} :: {
@@ -28,13 +31,10 @@ ParserImpl.__index = ParserImpl
 function ParserImpl:match(expected)
 	if self.pos < #self.tokens then
 		local currentToken = self.tokens[self.pos]
+		if currentToken.type.name == expected.name then
+			self.pos += 1
 
-		for _, tokenType in expected do
-			if currentToken.type.name == tokenType.name then
-				self.pos += 1
-
-				return currentToken
-			end
+			return currentToken
 		end
 	end
 
@@ -50,17 +50,29 @@ function ParserImpl:require(expected)
 	end
 end
 
-function ParserImpl:parse()
+function ParserImpl:parseComment()
 	return
 end
 
-function ParserImpl:parseComments()
-	-- local root = StatementsNode.new()
-	-- while self.pos < #self.tokens do
-	-- 	if self:match({ TokenType.tokenTypesList[3], TokenType.tokenTypesList[4] }) then
-	-- 		return {}
-	-- 	end
-	-- end
+function ParserImpl:parseExpression()
+	if self:match(TokenType.tokenTypesList[3]) then
+		return self:parseComment()
+	end
+
+	return nil
+end
+
+function ParserImpl:parseCode()
+	local root = StatementsNode.new()
+
+	while self.pos < #self.tokens do
+		local commentNode = self:parseExpression()
+		if commentNode then
+			root:addNode(commentNode)
+		end
+	end
+
+	return root
 end
 
 table.freeze(ParserImpl)

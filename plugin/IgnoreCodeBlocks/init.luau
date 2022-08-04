@@ -1,7 +1,9 @@
-type IgnoreCodeBlocksConfig = { [string]: boolean | IgnoreCodeBlocksConfig }
+export type IgnoreCodeBlocksConfig = { [string]: boolean | IgnoreCodeBlocksConfig }
 
 local IgnoreCodeBlocks = {}
 
+--@block:dev:1
+-- This function duplicates the provided Container
 function IgnoreCodeBlocks.scoped(container: LuaSourceContainer, config: IgnoreCodeBlocksConfig, fn: (LuaSourceContainer) -> ())
 	fn(container)
 

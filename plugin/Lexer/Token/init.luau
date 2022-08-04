@@ -13,11 +13,15 @@ export type Token = {
 local Token = {}
 
 function Token.new(type: TokenType, text: string, pos: number): Token
-	return {
+	local token = {
 		type = type,
 		text = text,
 		pos = pos,
 	}
+
+	table.freeze(token)
+
+	return token
 end
 
 table.freeze(Token)

@@ -7,14 +7,10 @@ local ServerStorage = game:GetService("ServerStorage")
 local Constants = {
 	folderName = "IgnoreCodeBlocks",
 	containerLocations = { ReplicatedFirst, ReplicatedStorage, workspace, StarterPlayer, ServerStorage, ServerScriptService },
-	postfixes = {
-		synced = "--@synced",
-		observed = "--@observed",
-	},
+	postfix = "--@IGNORE-ME-59a7f341-6062-5073-93bd-bec8c15963cc",
 }
 
 table.freeze(Constants)
 table.freeze(Constants.containerLocations)
-table.freeze(Constants.postfixes)
 
 return Constants

@@ -1,5 +1,9 @@
 --!strict
 
+if not plugin then
+	return
+end
+
 local ServerStorage = game:GetService("ServerStorage")
 
 local Constants = require(script.Constants)
@@ -17,13 +21,13 @@ local function onContainerAdd(container: LuaSourceContainer)
 
 	local function onSourceChange()
 		local newLexer = Lexer.new(container.Source)
-		local tokens = newLexer:lexAnalysis()
+		local tokens = newLexer:runAnalysis()
 
 		local isSynced = false
 
 		for _, token in tokens do
 			if token.type.name == "SINGLE_LINE_COMMENT" then
-				if token.text:match(Constants.postfixes.synced) then
+				if token.text:match(Constants.postfix) then
 					isSynced = true
 
 					break
@@ -119,7 +123,7 @@ local function onContainerAdd(container: LuaSourceContainer)
 				resultString ..= token.text
 			end
 
-			resultString ..= "\n" .. Constants.postfixes.synced
+			resultString ..= "\n" .. Constants.postfix
 
 			container.Source = resultString
 		end
