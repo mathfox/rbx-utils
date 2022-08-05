@@ -15,23 +15,29 @@
       "ServerStorage": {
          "$className": "ServerStorage",
          "IgnoreCodeBlocks": {
-            "$className": "Folder",
+            "$className": "ModuleScript",
             "$properties": {
                "Attributes": {
                   "dev": {
-                     "Bool": false
+                     "Bool": true
                   }
                }
             },
-            "Roact": {
+            "ReplicatedStorage": {
                "$className": "Folder",
-               "$properties": {
-                  "Attributes": {
-                     "internalTypeChecks": {
-                        "Bool": false
-                     },
-                     "elementTracing": {
-                        "Bool": false
+               "shared": {
+                  "$className": "Folder",
+                  "Roact": {
+                     "$className": "Folder",
+                     "$properties": {
+                        "Attributes": {
+                           "internalTypeChecks": {
+                              "Bool": false
+                           },
+                           "elementTracing": {
+                              "Bool": false
+                           }
+                        }
                      }
                   }
                }

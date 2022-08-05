@@ -178,7 +178,7 @@ function RobloxRenderer.mountHostNode(reconciler, virtualNode)
 	local hostParent = virtualNode.hostParent
 	local hostKey = virtualNode.hostKey
 
-	--@block-Roact:internalTypeChecks:2
+	--@block:internalTypeChecks:2 --local
 	internalAssert(ElementKind.of(element) == ElementKind.Host, "Element at given node is not a host Element")
 
 	--@block:dev:6

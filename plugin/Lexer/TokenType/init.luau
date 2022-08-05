@@ -19,8 +19,16 @@ function TokenType.new(name: string, match: (code: string) -> string?): TokenTyp
 end
 
 local tokenTypesList = {
+	TokenType.new("NEW_LINE", function(code)
+		return code:match("^[\r\n]")
+	end),
+
 	TokenType.new("SPACE", function(code)
-		return code:match("^%s")
+		return code:match("^ ")
+	end),
+
+	TokenType.new("TAB", function(code)
+		return code:match("^\t")
 	end),
 
 	TokenType.new("CODE", function(code)

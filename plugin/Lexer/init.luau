@@ -12,25 +12,26 @@ type LexerImpl = {
 }
 
 export type Lexer = typeof(setmetatable({} :: {
-	code: string,
-	pos: number,
+	container: LuaSourceContainer,
 }, {} :: LexerImpl))
 
 local LexerImpl = {} :: LexerImpl
 LexerImpl.__index = LexerImpl
 
 function LexerImpl:runAnalysis()
+	local code = self.container.Source
+	local pos = 1
 	local tokenList = {}
 
-	while self.pos <= #self.code do
+	while pos <= #code do
 		local hasMatchedTokenType = false
 
 		for _, tokenType in TokenType.tokenTypesList do
-			local result = tokenType.match(self.code:sub(self.pos))
+			local result = tokenType.match(code:sub(pos))
 			if result then
-				table.insert(tokenList, Token.new(tokenType, result, self.pos))
+				table.insert(tokenList, Token.new(tokenType, result, pos))
 
-				self.pos += #result
+				pos += #result
 
 				hasMatchedTokenType = true
 
@@ -39,7 +40,7 @@ function LexerImpl:runAnalysis()
 		end
 
 		if not hasMatchedTokenType then
-			error(("Could not match any TokenType at the %d position"):format(self.pos), 2)
+			error(("Could not match any TokenType at the %d position"):format(pos), 2)
 		end
 	end
 
@@ -48,11 +49,14 @@ end
 
 local Lexer = {}
 
-function Lexer.new(code: string): Lexer
-	return setmetatable({
-		code = code,
-		pos = 1,
+function Lexer.new(container: LuaSourceContainer): Lexer
+	local lexer = setmetatable({
+		container = container,
 	}, LexerImpl)
+
+	table.freeze(lexer)
+
+	return lexer
 end
 
 table.freeze(Lexer)

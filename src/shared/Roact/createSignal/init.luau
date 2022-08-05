@@ -18,7 +18,7 @@ local function createSignal()
 	local firing = false
 
 	local function subscribe(_, callback)
-		--@block-Roact:internalTypeChecks:4
+		--@block:internalTypeChecks:4 --local
 		if typeof(callback) ~= "function" then
 			error("Can only subscribe to signals with a function.", 2)
 		end

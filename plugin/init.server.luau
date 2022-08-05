@@ -9,6 +9,9 @@ local ServerStorage = game:GetService("ServerStorage")
 local Constants = require(script.Constants)
 local Lexer = require(script.Lexer)
 local TokenType = require(script.Lexer.TokenType)
+local Token = require(script.Lexer.Token)
+
+type Token = Token.Token
 
 local function onContainerAdd(container: LuaSourceContainer)
 	local destroyingConnnection: RBXScriptConnection = nil
@@ -19,15 +22,16 @@ local function onContainerAdd(container: LuaSourceContainer)
 		sourceChangedConnection:Disconnect()
 	end)
 
+	local newLexer = Lexer.new(container)
+
 	local function onSourceChange()
-		local newLexer = Lexer.new(container.Source)
 		local tokens = newLexer:runAnalysis()
 
 		local isSynced = false
 
 		for _, token in tokens do
 			if token.type.name == "SINGLE_LINE_COMMENT" then
-				if token.text:match(Constants.postfix) then
+				if token.text == Constants.postfix then
 					isSynced = true
 
 					break
@@ -36,86 +40,206 @@ local function onContainerAdd(container: LuaSourceContainer)
 		end
 
 		if not isSynced then
-			local resultTokens = {}
+			local resultTokens: { Token } = {}
 
-			local function runAppend(startIndex: number)
-				for tokenIndex = startIndex, #tokens do
-					local token = tokens[tokenIndex]
+			local function parseBody(text: string)
+				local _, endIndex = text:find("^%-%-%s?@block")
+				if endIndex then
+					return text:sub(endIndex + 1)
+				end
+			end
 
+			-- Raw means that this function does not take the options into an account
+			local function parseSection(body: string)
+				local _, sectionEndIndex = body:find("^:%a+")
+				if sectionEndIndex then
+					return body:sub(2, sectionEndIndex), body:sub(sectionEndIndex + 1)
+				end
+			end
+
+			local function parseArguments(rest: string)
+				local _, argumentsEndIndex = rest:find("^[%l%-%d:]+")
+				if argumentsEndIndex then
+					return rest:sub(1, argumentsEndIndex), rest:sub(argumentsEndIndex + 1)
+				end
+			end
+
+			local function parseFlags(rest: text): { string }?
+				local split = rest:split(" ")
+				if #split > 1 then
+					table.remove(split, 1)
+
+					local flags = {}
+
+					for _, flag in split do
+						table.insert(flags, flag)
+					end
+
+					return flags
+				end
+			end
+
+			local function parseSectionPath(flags: { string })
+				local path = {}
+
+				for _, flag in flags do
+					local _, prefixEndIndex = flag:find("^%-%-")
+					if prefixEndIndex then
+						local content = flag:sub(prefixEndIndex + 1)
+						if content:match("^local") then
+							local parent = container
+
+							while true do
+								table.insert(path, 1, parent)
+
+								parent = parent.Parent
+
+								if parent == game then
+									break
+								end
+							end
+						elseif content:match("^path=") then
+							local origin = loadstring(("return game.%s%s"):format(container:GetFullName(), content:sub(6)))()
+
+							while true do
+								table.insert(path, 1, origin)
+
+								origin = origin.Parent
+
+								if origin == game then
+									break
+								end
+							end
+						end
+					end
+				end
+
+				return path
+			end
+
+			local function shouldHandle()
+				return true
+			end
+
+			local function _appendHelper(...)
+				return select("#", ...), { ... }
+			end
+
+			local function parseOrAppendToken(fn: () -> (), token: Token)
+				local length, values = _appendHelper(fn())
+				if length == 0 then
+					table.insert(resultTokens, token)
+				else
+					return unpack(values, 1, length)
+				end
+			end
+
+			for tokenIndex, token in tokens do
+				if shouldHandle(tokenIndex, token) then
 					if token.type.name == "SINGLE_LINE_COMMENT" then
-						local blockStartMatch = token.text:match("^%-%-%s?@block[-%a]*:[%a]+:?[%a%d]+")
-						if blockStartMatch then
-							local blockSplit = blockStartMatch:split(":")
-							local blockName = blockSplit[2]
+						local body = parseOrAppendToken(function()
+							return parseBody(token.text)
+						end, token)
+						if not body then
+							continue
+						end
 
-							local shouldRemoveBlock = false
+						local section, rest = parseOrAppendToken(function()
+							return parseSection(body)
+						end, token)
+						if not section then
+							continue
+						end
 
-							-- basically an array indicating the path
-							local location = blockStartMatch:match("[%a]+-[-%a]+")
-							if location then
-								location = location:split("-")
+						local arguments, rest = parseOrAppendToken(function()
+							return parseArguments(rest)
+						end)
+						if not arguments then
+							continue
+						end
 
-								local currentPath = ServerStorage.IgnoreCodeBlocks
+						local path = nil
 
-								for pathDepth = 2, #location do
-									currentPath = currentPath:FindFirstChild(location[pathDepth])
+						local flags = parseFlags(rest)
+						if flags then
+							path = parseSectionPath(flags)
+						end
+
+						local shouldRemoveBlock = false
+						do
+							local currentPath = ServerStorage.IgnoreCodeBlocks
+							if path then
+								for _, nextPath in path do
+									currentPath = currentPath:FindFirstChild(nextPath.Name)
 									if not currentPath then
 										break
 									end
 								end
 
-								shouldRemoveBlock = if currentPath then currentPath:GetAttribute(blockName) else false
+								if currentPath then
+									shouldRemoveBlock = currentPath:GetAttribute(section)
+								end
 							else
-								shouldRemoveBlock = ServerStorage.IgnoreCodeBlocks:GetAttribute(blockName)
+								shouldRemoveBlock = ServerStorage.IgnoreCodeBlocks:GetAttribute(section)
 							end
+						end
 
-							if shouldRemoveBlock then
-								local blockAction = blockSplit[3]
+						if shouldRemoveBlock then
+							local split = arguments:split(":")
+							if #split > 1 then
+								-- removing the empty character
+								table.remove(split, 1)
 
-								if blockAction == "start" then
-									local blockEndStr = ("--@block:%s:end"):format(blockName)
-
-									for endIndex = tokenIndex + 1, #tokens do
-										local endToken = tokens[endIndex]
-										if endToken.text == blockEndStr then
-											runAppend(endIndex + 1)
-
-											break
-										else
-											table.insert(resultTokens, { text = "\n" })
+								local firstArgument = split[1]
+								if firstArgument == "start" then
+									function shouldHandle(_, token: Token)
+										if token.type.name == "SINGLE_LINE_COMMENT" then
+											-- local body = parseBody(token.text)
+											-- if body then
+											-- 	local sectionRaw, sectionEndIndex = parseSectionRaw(body)
+											-- 	if sectionRaw then
+											-- 		function shouldHandle()
+											-- 			return true
+											-- 		end
+											-- 	end
+											-- end
 										end
+
+										return false
 									end
-
-									break
 								else
-									local linesAmount = tonumber(blockAction)
+									local lines = tonumber(firstArgument)
+									if lines > 0 then
+										local currentNewLines = 0
 
-									if linesAmount and linesAmount ~= 0 then
-										local nextIndex = startIndex + 1 + linesAmount
-										if nextIndex < #tokens then
-											for _ = 1, linesAmount do
-												table.insert(resultTokens, { text = "\n" })
+										function shouldHandle(_, token: Token)
+											if token.type.name == "NEW_LINE" then
+												currentNewLines += 1
+
+												if currentNewLines == lines + 1 then
+													function shouldHandle()
+														return true
+													end
+												end
 											end
 
-											runAppend(nextIndex)
+											return false
 										end
-
-										break
 									end
 								end
 							end
 						else
 							table.insert(resultTokens, token)
 						end
-
+					-- TODO: multiple line comments
 					-- elseif token.type.name == "MULTIPLE_LINE_COMMENT" then
 					else
 						table.insert(resultTokens, token)
 					end
+				else
+					warn(token, "got skipped")
 				end
 			end
-
-			runAppend(1)
 
 			local resultString = ""
 
@@ -123,7 +247,7 @@ local function onContainerAdd(container: LuaSourceContainer)
 				resultString ..= token.text
 			end
 
-			resultString ..= "\n" .. Constants.postfix
+			resultString ..= "\r" .. Constants.postfix
 
 			container.Source = resultString
 		end
@@ -131,22 +255,32 @@ local function onContainerAdd(container: LuaSourceContainer)
 
 	onSourceChange()
 
-	sourceChangedConnection = container:GetPropertyChangedSignal("Source"):Connect(onSourceChange)
-end
+	sourceChangedConnection = container:GetPropertyChangedSignal("Source"):Connect(function()
+		local deferredSource = container.Source
 
-for _, location in Constants.containerLocations do
-	location.DescendantAdded:Connect(function(descendant)
-		if descendant:IsA("LuaSourceContainer") then
-			onContainerAdd(descendant)
-		end
+		task.defer(function()
+			if deferredSource == container.Source then
+				onSourceChange()
+			end
+		end)
 	end)
-
-	for _, container in location:GetDescendants() do
-		if container:IsA("LuaSourceContainer") then
-			onContainerAdd(container)
-		end
-	end
 end
+
+onContainerAdd(game.ReplicatedStorage.server.PhysicsServiceUtils)
+
+-- for _, location in Constants.containerLocations do
+-- 	location.DescendantAdded:Connect(function(descendant)
+-- 		if descendant:IsA("LuaSourceContainer") then
+-- 			onContainerAdd(descendant)
+-- 		end
+-- 	end)
+
+-- 	for _, container in location:GetDescendants() do
+-- 		if container:IsA("LuaSourceContainer") then
+-- 			onContainerAdd(container)
+-- 		end
+-- 	end
+-- end
 
 local shouldCreateAPI = true
 

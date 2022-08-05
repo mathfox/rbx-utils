@@ -67,7 +67,7 @@ local function createElement(component: string | FunctionComponent | StatefulCom
 		props = props,
 	}
 
-	--@block-Roact:elementTracing:4
+	--@block:elementTracing:4 --local
 	-- We trim out the leading newline since there's no way to specify the
 	-- trace level without also specifying a message.
 	element.source = debug.traceback("", 2):sub(2)
