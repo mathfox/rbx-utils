@@ -32,7 +32,10 @@ local tokenTypesList = {
 	end),
 
 	TokenType.new("CODE", function(code)
-		if not code:match("^%-%-") then
+		local commentStartIndex = code:find("%-%-")
+		if commentStartIndex then
+			return code:sub(1, commentStartIndex - 1):match("^[ \t%w%p]+")
+		else
 			return code:match("^[ \t%w%p]+")
 		end
 	end),

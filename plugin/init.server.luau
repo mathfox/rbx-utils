@@ -135,109 +135,146 @@ local function onContainerAdd(container: LuaSourceContainer)
 			end
 
 			for tokenIndex, token in tokens do
-				if shouldHandle(tokenIndex, token) then
-					if token.type.name == "SINGLE_LINE_COMMENT" then
-						local body = parseOrAppendToken(function()
-							return parseBody(token.text)
-						end, token)
-						if not body then
-							continue
+				if not shouldHandle(token) then
+					continue
+				end
+
+				if token.type.name == "SINGLE_LINE_COMMENT" then
+					local body = parseOrAppendToken(function()
+						return parseBody(token.text)
+					end, token)
+					if not body then
+						continue
+					end
+
+					local section, rest = parseOrAppendToken(function()
+						return parseSection(body)
+					end, token)
+					if not section then
+						continue
+					end
+
+					local arguments = parseOrAppendToken(function()
+						local inner, innerRest = parseArguments(rest)
+
+						if inner then
+							rest = innerRest
 						end
 
-						local section, rest = parseOrAppendToken(function()
-							return parseSection(body)
-						end, token)
-						if not section then
-							continue
+						return inner
+					end, token)
+
+					local path = nil
+
+					local flags = parseFlags(rest)
+					if flags then
+						path = parseSectionPath(flags)
+					end
+
+					local shouldRemoveBlock = false
+					do
+						local currentPath = ServerStorage.IgnoreCodeBlocks
+						if path then
+							for _, nextPath in path do
+								currentPath = currentPath:FindFirstChild(nextPath.Name)
+								if not currentPath then
+									break
+								end
+							end
+
+							if currentPath then
+								shouldRemoveBlock = currentPath:GetAttribute(section)
+							end
+						else
+							shouldRemoveBlock = ServerStorage.IgnoreCodeBlocks:GetAttribute(section)
+						end
+					end
+
+					if shouldRemoveBlock then
+						warn("shouldRemoveBlock at", token, flags)
+						function shouldHandle(token: Token)
+							if token.type.name == "NEW_LINE" then
+								function shouldHandle()
+									return true
+								end
+							else
+								table.insert(resultTokens, "\r")
+							end
+
+							return false
 						end
 
-						local arguments, rest = parseOrAppendToken(function()
-							return parseArguments(rest)
-						end)
+						for lastIndex = #resultTokens, 1, -1 do
+							local lastToken = resultTokens[lastIndex]
+							if lastToken.type.name == "NEW_LINE" then
+								if flags then
+									if table.find(flags, "--no-lines-preserve") then
+										table.remove(resultTokens, lastIndex)
+									end
+								end
+
+								break
+							else
+								table.remove(resultTokens, lastIndex)
+							end
+						end
+
 						if not arguments then
 							continue
 						end
 
-						local path = nil
-
-						local flags = parseFlags(rest)
-						if flags then
-							path = parseSectionPath(flags)
+						local split = arguments:split(":")
+						if #split <= 1 then
+							continue
 						end
 
-						local shouldRemoveBlock = false
-						do
-							local currentPath = ServerStorage.IgnoreCodeBlocks
-							if path then
-								for _, nextPath in path do
-									currentPath = currentPath:FindFirstChild(nextPath.Name)
-									if not currentPath then
-										break
-									end
+						-- removing the empty character
+						table.remove(split, 1)
+
+						local firstArgument = split[1]
+						if firstArgument == "start" then
+							function shouldHandle(token: Token)
+								if token.type.name == "SINGLE_LINE_COMMENT" then
+									-- local body = parseBody(token.text)
+									-- if body then
+									-- 	local sectionRaw, sectionEndIndex = parseSectionRaw(body)
+									-- 	if sectionRaw then
+									-- 		function shouldHandle()
+									-- 			return true
+									-- 		end
+									-- 	end
+									-- end
 								end
 
-								if currentPath then
-									shouldRemoveBlock = currentPath:GetAttribute(section)
-								end
-							else
-								shouldRemoveBlock = ServerStorage.IgnoreCodeBlocks:GetAttribute(section)
-							end
-						end
-
-						if shouldRemoveBlock then
-							local split = arguments:split(":")
-							if #split > 1 then
-								-- removing the empty character
-								table.remove(split, 1)
-
-								local firstArgument = split[1]
-								if firstArgument == "start" then
-									function shouldHandle(_, token: Token)
-										if token.type.name == "SINGLE_LINE_COMMENT" then
-											-- local body = parseBody(token.text)
-											-- if body then
-											-- 	local sectionRaw, sectionEndIndex = parseSectionRaw(body)
-											-- 	if sectionRaw then
-											-- 		function shouldHandle()
-											-- 			return true
-											-- 		end
-											-- 	end
-											-- end
-										end
-
-										return false
-									end
-								else
-									local lines = tonumber(firstArgument)
-									if lines > 0 then
-										local currentNewLines = 0
-
-										function shouldHandle(_, token: Token)
-											if token.type.name == "NEW_LINE" then
-												currentNewLines += 1
-
-												if currentNewLines == lines + 1 then
-													function shouldHandle()
-														return true
-													end
-												end
-											end
-
-											return false
-										end
-									end
-								end
+								return false
 							end
 						else
-							table.insert(resultTokens, token)
+							local lines = tonumber(firstArgument)
+							if lines > 0 then
+								local currentNewLines = 0
+
+								function shouldHandle(token: Token)
+									if token.type.name == "NEW_LINE" then
+										currentNewLines += 1
+
+										if currentNewLines == (lines * 2) + 1 then
+											function shouldHandle()
+												return true
+											end
+										end
+									end
+
+									return false
+								end
+							end
 						end
-					-- TODO: multiple line comments
-					-- elseif token.type.name == "MULTIPLE_LINE_COMMENT" then
 					else
 						table.insert(resultTokens, token)
 					end
+					-- TODO: multiple line comments
+					-- elseif token.type.name == "MULTIPLE_LINE_COMMENT" then
 				else
-					warn(token, "got skipped")
+					table.insert(resultTokens, token)
 				end
 			end
 
