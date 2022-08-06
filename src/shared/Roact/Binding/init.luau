@@ -45,7 +45,7 @@ function BindingInternalApi.create(initialValue)
 		changeSignal = createSignal(),
 	}
 
-	function impl.subscribe(callback)
+	function impl.subscribe(callback: () -> ())
 		return impl.changeSignal:subscribe(callback)
 	end
 
@@ -70,7 +70,7 @@ function BindingInternalApi.create(initialValue)
 end
 
 function BindingInternalApi.map(upstreamBinding, predicate)
-	--@block:dev:6
+	--@block:dev:6 --no-lines-preserve
 	if Type.of(upstreamBinding) ~= Type.Binding then
 		error("Expected arg #1 to be a binding", 2)
 	elseif type(predicate) ~= "function" then

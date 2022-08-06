@@ -9,8 +9,6 @@ type FunctionComponent = Types.RoactFunctionComponent
 type StatefulComponent = Types.RoactStatefulComponent
 type Element = Types.RoactElement
 
-local config = require(script.Parent.GlobalConfig).get()
-
 local multipleChildrenMessage = [[
 The prop `Roact.Children` was defined but was overridden by the third parameter to createElement!
 This can happen when a component passes props through to a child element but also uses the `children` argument:
@@ -41,15 +39,14 @@ Instead, consider using a utility function to merge tables of children together:
 	props. If specified, the passed `props` table is mutated!
 ]]
 local function createElement(component: string | FunctionComponent | StatefulComponent, props: { [any]: any }?, children: { [any]: any }?): Element
-	--@block:dev:start
+	--@block:dev:8
 	if component == nil then
-		error('"component" argument is required')
+		error('"component" argument is required', 2)
 	elseif type(props) ~= "table" and props ~= nil then
-		error('"props" must be either a table or nil')
+		error('"props" must be either a table or nil', 2)
 	elseif type(children) ~= "table" and children ~= nil then
-		error('"children" must be either a table or nil')
+		error('"children" must be either a table or nil', 2)
 	end
-	--@block:dev:end
 
 	if props == nil then
 		props = {}
@@ -70,11 +67,10 @@ local function createElement(component: string | FunctionComponent | StatefulCom
 		props = props,
 	}
 
-	if config.elementTracing then
-		-- We trim out the leading newline since there's no way to specify the
-		-- trace level without also specifying a message.
-		element.source = debug.traceback("", 2):sub(2)
-	end
+	--@block:elementTracing:4 --local
+	-- We trim out the leading newline since there's no way to specify the
+	-- trace level without also specifying a message.
+	element.source = debug.traceback("", 2):sub(2)
 
 	--@block:dev:2
 	table.freeze(element)

@@ -1,3 +1,4 @@
+--@block:dev:2
 -- refactored version of: https://github.com/howmanysmall/enumerator
 
 local Types = require(script.Parent.Types)

@@ -19,4 +19,7 @@ function NoopRenderer.updateHostNode(_, node)
 	return node
 end
 
+--@block:dev:2
+table.freeze(NoopRenderer)
+
 return NoopRenderer

@@ -11,6 +11,8 @@
 
 local Symbol = require(script.Parent.Parent.Symbol)
 
+type Symbol = Symbol.Symbol
+
 local Type = {}
 
 local TypeInternal = {}
@@ -46,4 +48,19 @@ table.freeze(TypeInternal)
 table.freeze(TypeMetatable)
 table.freeze(Type)
 
-return Type
+return Type :: typeof(setmetatable(
+	{},
+	{} :: {
+		__tostring: () -> "RoactType",
+		__index: {
+			Binding: Symbol,
+			Element: Symbol,
+			HostChangeEvent: Symbol,
+			HostEvent: Symbol,
+			StatefulComponentClass: Symbol,
+			StatefulComponentInstance: Symbol,
+			VirtualNode: Symbol,
+			VirtualTree: Symbol,
+		},
+	}
+))

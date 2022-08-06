@@ -3,6 +3,8 @@ local InstanceUtils = {
 	clearAllChildrenWhichIsA = require(script.clearAllChildrenWhichIsA),
 	clearAllDescendantsOfClass = require(script.clearAllDescendantsOfClass),
 	clearAllDescendantsWhichIsA = require(script.clearAllDescendantsWhichIsA),
+	clearChildrenByPredicate = require(script.clearChildrenByPredicate),
+	clearDescendantsByPredicate = require(script.clearDescendantsByPredicate),
 	findFirstDescendantOfClass = require(script.findFirstDescendantOfClass),
 	findFirstDescendantWhichIsA = require(script.findFirstDescendantWhichIsA),
 	getChildrenOfClass = require(script.getChildrenOfClass),
@@ -16,7 +18,7 @@ local InstanceUtils = {
 	waitUntilParentedTo = require(script.waitUntilParentedTo),
 }
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(InstanceUtils)
 
 return InstanceUtils

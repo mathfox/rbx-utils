@@ -1,4 +1,7 @@
---@block:dev:1
+--@block:dev:2 --no-lines-preserve
+--!strict
+
+--@block:dev:1 --no-lines-preserve
 -- the table returned by the table.pack function: https://create.roblox.com/docs/reference/engine/libraries/table#pack
 export type PackedValues<T> = { n: number, [number]: T }
 
@@ -25,7 +28,7 @@ export type Enumerator<T = string> = typeof(setmetatable(
 	}
 ))
 
---@block:dev:1
+--@block:dev:1 --no-lines-preserve
 -- reference: https://doc.rust-lang.org/std/result/enum.Result.html#
 type ResultImpl<T, E> = {
 	__tostring: () -> string,
@@ -55,7 +58,7 @@ export type Result<T, E> = typeof(setmetatable({}, {} :: ResultImpl<T, E>))
 export type Ok<T> = Result<T, nil>
 export type Err<E> = Result<nil, E>
 
---@block:dev:1
+--@block:dev:1 --no-lines-preserve
 -- reference: https://doc.rust-lang.org/std/option/enum.Option.html
 type OptionImpl<T> = {
 	__tostring: () -> string,
@@ -108,7 +111,7 @@ export type Signal<T... = ...any> = typeof(setmetatable(
 ))
 
 export type PromiseExecutor<T...> = (resolve: (T...) -> (), reject: (...any) -> (), onCancel: (cancellationHook: (() -> ())?) -> boolean) -> ()
---@block:dev:1
+--@block:dev:1 --no-lines-preserve
 -- reference: https://eryn.io/roblox-lua-promise/api/Promise
 export type Promise<T...> = {
 	andThen: <R...>(self: Promise<T...>, successHandler: (T...) -> R..., failureHandler: (...any) -> R...) -> Promise<R...>,
@@ -131,6 +134,7 @@ export type Promise<T...> = {
 }
 
 type JanitorIndex = boolean | number | string | (...any) -> ...any | { [any]: any } | thread
+--@block:dev:1 --no-lines-preserve
 -- * this type is not supposed to be used externally
 export type JanitorImpl = {
 	__index: JanitorImpl,
@@ -267,6 +271,7 @@ export type Friend = {
 	IsOnline: boolean,
 }
 
+--@block:dev:4 --no-lines-preserve
 -- rodux related types, reference: https://roblox.github.io/rodux/
 -- some types references:
 -- https://github.com/Roblox/rodux/commit/07f634e1dffd173f9e160fed40e1f03b9d17e619
@@ -289,14 +294,32 @@ export type RoduxAction<Type = any> = { type: Type, [any]: any }
 export type RoduxAnyAction = RoduxAction
 export type RoduxActionCreator<Type, Action, Args...> = typeof(setmetatable({} :: { name: Type }, {} :: { __call: (any, Args...) -> Action & { type: Type } }))
 
+--@block:dev:1 --no-lines-preserve
 -- roact related types, reference: https://roblox.github.io/roact/
+export type RoactElementImpl = {
+	--@block:dev:4 --no-lines-preserve
+	-- FIXME: ability to represent key of table type
+	-- [Type]: Symbol,
+	-- [ElementKind]: Symbol,
+
+	[any]: Symbol,
+}
+export type RoactElement = RoactElementImpl & {
+	component: string | RoactFunctionComponent | RoactStatefulComponent,
+	props: { [any]: any },
+}
+export type RoactFragment = RoactElementImpl & {
+	elements: { [any]: RoactElementImpl },
+}
 export type RoactFunctionComponent = ({ [any]: any }) -> RoactElement
 type RoactStatefulComponentImpl = {
 	__index: RoactStatefulComponentImpl,
 	__tostring: (self: RoactStatefulComponent) -> string,
 
+	--@block:dev:1 --no-lines-preserve
 	-- reference: https://roblox.github.io/roact/api-reference/#setstate
 	setState: (self: RoactStatefulComponent, mapState: { [any]: any } | (previousState: { [any]: any }, props: { [any]: any }) -> ()) -> (),
+	--@block:dev:1 --no-lines-preserve
 	-- reference: https://roblox.github.io/roact/api-reference/#getelementtraceback
 	getElementTraceback: (self: RoactStatefulComponent) -> string?,
 
@@ -305,41 +328,44 @@ type RoactStatefulComponentImpl = {
 }
 export type RoactStatefulComponent = typeof(setmetatable(
 	{} :: {
+		--@block:dev:1 --no-lines-preserve
 		-- reference: https://roblox.github.io/roact/api-reference/#defaultprops
 		defaultProps: { [any]: any }?,
 
+		--@block:dev:1 --no-lines-preserve
 		-- reference: https://roblox.github.io/roact/api-reference/#init
 		init: ((self: RoactStatefulComponent, initialProps: { [any]: any }) -> ())?,
+		--@block:dev:1 --no-lines-preserve
 		-- reference: https://roblox.github.io/roact/api-reference/#render
 		render: (self: RoactStatefulComponent) -> RoactElement?,
+		--@block:dev:1 --no-lines-preserve
 		-- reference: https://roblox.github.io/roact/api-reference/#shouldupdate
 		shouldUpdate: ((nextProps: { [any]: any }, nextState: { [any]: any }) -> boolean)?,
+		--@block:dev:1 --no-lines-preserve
 		-- * static lifecycle function, reference: https://roblox.github.io/roact/api-reference/#validateprops
 		validateProps: ((props: { [any]: any }) -> (boolean, string?))?,
 
+		--@block:dev:1 --no-lines-preserve
 		-- reference: https://roblox.github.io/roact/api-reference/#didmount
 		didMount: ((self: RoactStatefulComponent) -> ())?,
+		--@block:dev:1 --no-lines-preserve
 		-- reference: https://roblox.github.io/roact/api-reference/#willunmount
 		willUnmount: ((self: RoactStatefulComponent) -> ())?,
+		--@block:dev:1 --no-lines-preserve
 		-- reference: https://roblox.github.io/roact/api-reference/#willupdate
 		willUpdate: ((self: RoactStatefulComponent, nextProps: { [any]: any }, nextState: { [any]: any }) -> ())?,
+		--@block:dev:1 --no-lines-preserve
 		-- reference: https://roblox.github.io/roact/api-reference/#didupdate
 		didUpdate: ((self: RoactStatefulComponent, previousProps: { [any]: any }, previousState: { [any]: any }) -> ())?,
 
+		--@block:dev:1 --no-lines-preserve
 		-- * static lifecycle function, reference: https://roblox.github.io/roact/api-reference/#getderivedstatefromprops
 		getDerivedStateFromProps: (nextProps: { [any]: any }, lastState: { [any]: any }) -> { [any]: any }?,
 	},
 	{} :: RoactStatefulComponentImpl
 ))
-export type RoactElement = {
-	props: { [any]: any },
-	component: string | RoactFunctionComponent | RoactStatefulComponent | RoactFragment | RoactPortal,
-	source: string?,
-}
-export type RoactFragment = {
-	elements: { [any]: RoactElement },
-}
 export type RoactPortal = Symbol
+--@block:dev:1 --no-lines-preserve
 -- TODO: add generic render value type
 type RoactContextConsumer = typeof(setmetatable(
 	{} :: {
@@ -366,5 +392,23 @@ export type RoactContext = {
 	Provider: RoactContextProvider,
 }
 export type RoactRef = {}
+export type RoactBindingImpl<T> = {
+	__index: {
+		getValue: () -> T,
+		map: (predicate: (T) -> T) -> RoactBinding,
+	},
+	__tostring: () -> string,
+}
+export type RoactBinding<Impl> = typeof(setmetatable(
+	{} :: {
+		--@block:dev:4 --no-lines-preserve
+		-- FIXME: proper type of
+		-- [Type]: Symbol
+		-- [BindingImpl]: Impl
+
+		[any]: Symbol,
+	},
+	{} :: RoactBindingImpl
+))
 
 return nil

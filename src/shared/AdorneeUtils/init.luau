@@ -10,7 +10,7 @@ local AdorneeUtils = {
 	isPartOfAdornee = require(script.isPartOfAdornee),
 }
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(AdorneeUtils)
 
 return AdorneeUtils

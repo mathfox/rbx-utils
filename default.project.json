@@ -1,22 +1,44 @@
 {
    "name": "rbx-utils",
-   "globIgnorePaths": [
-      "**/*.spec.lua"
-   ],
    "tree": {
       "$className": "DataModel",
       "ReplicatedStorage": {
          "$className": "ReplicatedStorage",
          "$path": "src"
       },
+      "ServerScriptService": {
+         "$className": "ServerScriptService",
+         "plugin": {
+            "$path": "plugin"
+         }
+      },
       "ServerStorage": {
          "$className": "ServerStorage",
          "IgnoreCodeBlocks": {
-            "$className": "Folder",
+            "$className": "ModuleScript",
             "$properties": {
                "Attributes": {
                   "dev": {
-                     "Bool": false
+                     "Bool": true
+                  }
+               }
+            },
+            "ReplicatedStorage": {
+               "$className": "Folder",
+               "shared": {
+                  "$className": "Folder",
+                  "Roact": {
+                     "$className": "Folder",
+                     "$properties": {
+                        "Attributes": {
+                           "internalTypeChecks": {
+                              "Bool": false
+                           },
+                           "elementTracing": {
+                              "Bool": false
+                           }
+                        }
+                     }
                   }
                }
             }
