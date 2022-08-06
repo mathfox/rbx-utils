@@ -331,9 +331,5 @@ for _, child in ServerStorage:GetChildren() do
 end
 
 if shouldCreateAPI then
-	script.IgnoreCodeBlocks.Parent = ServerStorage
+	script.IgnoreCodeBlocks:Clone().Parent = ServerStorage
 end
-
-plugin.Unloading:Connect(function()
-	return
-end)
