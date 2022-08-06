@@ -32,10 +32,13 @@
                      "$properties": {
                         "Attributes": {
                            "internalTypeChecks": {
-                              "Bool": false
+                              "Bool": true
                            },
                            "elementTracing": {
-                              "Bool": false
+                              "Bool": true
+                           },
+                           "propValidation": {
+                              "Bool": true
                            }
                         }
                      }

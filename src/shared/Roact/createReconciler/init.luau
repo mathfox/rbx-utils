@@ -66,7 +66,7 @@ local function createReconciler(renderer)
 		updated children given as elements.
 	]]
 	local function updateChildren(virtualNode, hostParent, newChildElements)
-		--@block:internalTypeChecks:2 --local
+		--@block:internalTypeChecks:2 --path=.Parent
 		internalAssert(Type.of(virtualNode) == Type.VirtualNode, "Expected arg #1 to be of type VirtualNode")
 
 		virtualNode.updateChildrenCount = virtualNode.updateChildrenCount + 1
@@ -147,7 +147,7 @@ local function createReconciler(renderer)
 		Unmounts the given virtual node and releases any held resources.
 	]]
 	function unmountVirtualNode(virtualNode)
-		--@block:internalTypeChecks:2 --local
+		--@block:internalTypeChecks:2 --path=.Parent
 		internalAssert(Type.of(virtualNode) == Type.VirtualNode, "Expected arg #1 to be of type VirtualNode")
 
 		virtualNode.wasUnmounted = true
@@ -224,7 +224,7 @@ local function createReconciler(renderer)
 		a warning to the user.
 	]]
 	function updateVirtualNode(virtualNode, newElement, newState)
-		--@block:internalTypeChecks:2 --local
+		--@block:internalTypeChecks:2 --path=.Parent
 		internalAssert(Type.of(virtualNode) == Type.VirtualNode, "Expected arg #1 to be of type VirtualNode")
 
 		--@block:dev:start
@@ -280,7 +280,7 @@ local function createReconciler(renderer)
 		Constructs a new virtual node but not does mount it.
 	]]
 	local function createVirtualNode(element, hostParent, hostKey, context, legacyContext)
-		--@block:internalTypeChecks:4 --local
+		--@block:internalTypeChecks:4 --path=.Parent
 		internalAssert(renderer.isHostObject(hostParent) or hostParent == nil, "Expected arg #2 to be a host object")
 		internalAssert(type(context) == "table" or context == nil, "Expected arg #4 to be of type table or nil")
 		internalAssert(type(legacyContext) == "table" or legacyContext == nil, "Expected arg #5 to be of type table or nil")
@@ -353,7 +353,7 @@ local function createReconciler(renderer)
 		the tree.
 	]]
 	function mountVirtualNode(element, hostParent, hostKey, context, legacyContext)
-		--@block:internalTypeChecks:3 --local
+		--@block:internalTypeChecks:3 --path=.Parent
 		internalAssert(renderer.isHostObject(hostParent) or hostParent == nil, "Expected arg #2 to be a host object")
 		internalAssert(type(legacyContext) == "table" or legacyContext == nil, "Expected arg #5 to be of type table or nil")
 

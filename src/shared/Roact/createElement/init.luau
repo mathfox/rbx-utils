@@ -67,7 +67,7 @@ local function createElement(component: string | FunctionComponent | StatefulCom
 		props = props,
 	}
 
-	--@block:elementTracing:4 --local
+	--@block:elementTracing:4 --path=.Parent
 	-- We trim out the leading newline since there's no way to specify the
 	-- trace level without also specifying a message.
 	element.source = debug.traceback("", 2):sub(2)
