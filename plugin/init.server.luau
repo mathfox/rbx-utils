@@ -191,7 +191,6 @@ local function onContainerAdd(container: LuaSourceContainer)
 					end
 
 					if shouldRemoveBlock then
-						warn("shouldRemoveBlock at", token, flags)
 						function shouldHandle(token: Token)
 							if token.type.name == "NEW_LINE" then
 								function shouldHandle()
@@ -303,21 +302,19 @@ local function onContainerAdd(container: LuaSourceContainer)
 	end)
 end
 
-onContainerAdd(game.ReplicatedStorage.server.PhysicsServiceUtils)
+for _, location in Constants.containerLocations do
+	location.DescendantAdded:Connect(function(descendant)
+		if descendant:IsA("LuaSourceContainer") then
+			onContainerAdd(descendant)
+		end
+	end)
 
--- for _, location in Constants.containerLocations do
--- 	location.DescendantAdded:Connect(function(descendant)
--- 		if descendant:IsA("LuaSourceContainer") then
--- 			onContainerAdd(descendant)
--- 		end
--- 	end)
-
--- 	for _, container in location:GetDescendants() do
--- 		if container:IsA("LuaSourceContainer") then
--- 			onContainerAdd(container)
--- 		end
--- 	end
--- end
+	for _, container in location:GetDescendants() do
+		if container:IsA("LuaSourceContainer") then
+			onContainerAdd(container)
+		end
+	end
+end
 
 local shouldCreateAPI = true
 
