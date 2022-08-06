@@ -18,7 +18,7 @@ local function createSignal()
 	local firing = false
 
 	local function subscribe(_, callback)
-		--@block:internalTypeChecks:4 --local
+		--@block:internalTypeChecks:4 --path=.Parent
 		if typeof(callback) ~= "function" then
 			error("Can only subscribe to signals with a function.", 2)
 		end

@@ -73,7 +73,7 @@ function Component:extend(name: string): StatefulComponent
 end
 
 function Component:__getDerivedState(incomingProps, incomingState)
-	--@block:internalTypeChecks:2 --local
+	--@block:internalTypeChecks:2 --path=.Parent
 	internalAssert(Type.of(self) == Type.StatefulComponentInstance, "Invalid use of `__getDerivedState`")
 
 	local internalData = self[InternalData]
@@ -190,7 +190,7 @@ end
 	if a requested context key is not present
 ]]
 function Component:__getContext(key)
-	--@block:internalTypeChecks:3 --local
+	--@block:internalTypeChecks:3 --path=.Parent
 	internalAssert(Type.of(self) == Type.StatefulComponentInstance, "Invalid use of `__getContext`")
 	internalAssert(key ~= nil, "Context key cannot be nil")
 
@@ -205,7 +205,7 @@ end
 	passed down to child components).
 ]]
 function Component:__addContext(key, value)
-	--@block:internalTypeChecks:2 --local
+	--@block:internalTypeChecks:2 --path=.Parent
 	internalAssert(Type.of(self) == Type.StatefulComponentInstance, "Invalid use of `__addContext`")
 
 	local virtualNode = self[InternalData].virtualNode
@@ -232,7 +232,7 @@ end
 	error.
 ]]
 function Component:__validateProps(props)
-	--@block:propValidation:3 --local
+	--@block:propValidation:3 --path=.Parent
    --stylua: ignore
    if true then return end
 
@@ -258,7 +258,7 @@ end
 	instance and attach it to the given virtualNode.
 ]]
 function Component:__mount(reconciler, virtualNode)
-	--@block:internalTypeChecks:3 --local
+	--@block:internalTypeChecks:3 --path=.Parent
 	internalAssert(Type.of(self) == Type.StatefulComponentClass, "Invalid use of `__mount`")
 	internalAssert(Type.of(virtualNode) == Type.VirtualNode, "Expected arg #2 to be of type VirtualNode")
 
@@ -330,7 +330,7 @@ end
 	this component instance.
 ]]
 function Component:__unmount()
-	--@block:internalTypeChecks:2 --local
+	--@block:internalTypeChecks:2 --path=.Parent
 	internalAssert(Type.of(self) == Type.StatefulComponentInstance, "Invalid use of `__unmount`")
 
 	local internalData = self[InternalData]
@@ -354,7 +354,7 @@ end
 	Returns true if the update was completed, false if it was cancelled by shouldUpdate
 ]]
 function Component:__update(updatedElement, updatedState)
-	--@block:internalTypeChecks:4 --local
+	--@block:internalTypeChecks:4 --path=.Parent
 	internalAssert(Type.of(self) == Type.StatefulComponentInstance, "Invalid use of `__update`")
 	internalAssert(Type.of(updatedElement) == Type.Element or updatedElement == nil, "Expected arg #1 to be of type Element or nil")
 	internalAssert(type(updatedState) == "table" or updatedState == nil, "Expected arg #2 to be of type table or nil")
@@ -424,7 +424,7 @@ end
 	Returns true if the update was completed, false if it was cancelled by shouldUpdate
 ]]
 function Component:__resolveUpdate(incomingProps, incomingState)
-	--@block:internalTypeChecks:2 --local
+	--@block:internalTypeChecks:2 --path=.Parent
 	internalAssert(Type.of(self) == Type.StatefulComponentInstance, "Invalid use of `__resolveUpdate`")
 
 	local internalData = self[InternalData]

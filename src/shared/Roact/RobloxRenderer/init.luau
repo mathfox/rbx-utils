@@ -178,7 +178,7 @@ function RobloxRenderer.mountHostNode(reconciler, virtualNode)
 	local hostParent = virtualNode.hostParent
 	local hostKey = virtualNode.hostKey
 
-	--@block:internalTypeChecks:2 --local
+	--@block:internalTypeChecks:2 --path=.Parent
 	internalAssert(ElementKind.of(element) == ElementKind.Host, "Element at given node is not a host Element")
 
 	--@block:dev:6
@@ -278,7 +278,7 @@ function RobloxRenderer.updateHostNode(reconciler, virtualNode, newElement)
 	return virtualNode
 end
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(RobloxRenderer)
 
 return RobloxRenderer

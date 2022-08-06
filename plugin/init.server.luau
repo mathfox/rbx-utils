@@ -234,15 +234,17 @@ local function onContainerAdd(container: LuaSourceContainer)
 						if firstArgument == "start" then
 							function shouldHandle(token: Token)
 								if token.type.name == "SINGLE_LINE_COMMENT" then
-									-- local body = parseBody(token.text)
-									-- if body then
-									-- 	local sectionRaw, sectionEndIndex = parseSectionRaw(body)
-									-- 	if sectionRaw then
-									-- 		function shouldHandle()
-									-- 			return true
-									-- 		end
-									-- 	end
-									-- end
+									local body = parseBody(token.text)
+									if body then
+										local endSection = parseSection(body)
+										if section == endSection then
+											function shouldHandle()
+												return true
+											end
+										end
+									end
+								elseif token.type.name == "NEW_LINE" then
+									return if flags then not table.find(flags, "--no-lines-preserve") else true
 								end
 
 								return false
@@ -261,6 +263,8 @@ local function onContainerAdd(container: LuaSourceContainer)
 												return true
 											end
 										end
+
+										return if flags then not table.find(flags, "--no-lines-preserve") else true
 									end
 
 									return false

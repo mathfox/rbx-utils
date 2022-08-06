@@ -41,7 +41,12 @@ local tokenTypesList = {
 	end),
 
 	TokenType.new("MULTIPLE_LINE_COMMENT", function(code)
-		return code:match("^%-%-%[%[.*%]%]")
+		if code:match("^%-%-%[%[") then
+			local _, commentEndIndex = code:sub(5):find("%]%]")
+			if commentEndIndex then
+				return code:sub(1, commentEndIndex)
+			end
+		end
 	end),
 
 	TokenType.new("SINGLE_LINE_COMMENT", function(code)
