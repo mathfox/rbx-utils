@@ -7,8 +7,10 @@ type ElementImpl = Types.RoactElementImpl
 type Fragment = Types.RoactFragment
 
 local function createFragment(elements: { [any]: ElementImpl }): Fragment
-	--@block:dev:2
-	table.freeze(elements)
+	--@block:dev:4
+	if not table.isfrozen(elements) then
+		table.freeze(elements)
+	end
 
 	local fragment = {
 		[Type] = Type.Element,
