@@ -197,24 +197,43 @@ local function onContainerAdd(container: LuaSourceContainer)
 									return true
 								end
 							else
-								table.insert(resultTokens, "\r")
+								table.insert(resultTokens, token)
 							end
 
 							return false
 						end
 
-						for lastIndex = #resultTokens, 1, -1 do
-							local lastToken = resultTokens[lastIndex]
-							if lastToken.type.name == "NEW_LINE" then
-								if flags then
-									if table.find(flags, "--no-lines-preserve") then
-										table.remove(resultTokens, lastIndex)
+						if arguments then
+							for lastIndex = #resultTokens, 1, -1 do
+								local lastToken = resultTokens[lastIndex]
+								if lastToken.type.name == "NEW_LINE" then
+									if flags then
+										if table.find(flags, "--no-lines-preserve") then
+											table.remove(resultTokens, lastIndex)
+										end
+									end
+
+									break
+								else
+									table.remove(resultTokens, lastIndex)
+								end
+							end
+						else
+							for lastIndex = #resultTokens, 1, -1 do
+								local lastToken = resultTokens[lastIndex]
+								if lastToken.type.name == "SPACE" or lastToken.type.name == "TAB" then
+									table.remove(resultTokens, lastIndex)
+
+									continue
+								elseif lastToken.type.name == "NEW_LINE" then
+									if flags then
+										if table.find(flags, "--no-lines-preserve") then
+											table.remove(resultTokens, lastIndex)
+										end
 									end
 								end
 
 								break
-							else
-								table.remove(resultTokens, lastIndex)
 							end
 						end
 
