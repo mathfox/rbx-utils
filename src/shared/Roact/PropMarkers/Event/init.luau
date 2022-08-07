@@ -43,6 +43,5 @@ setmetatable(Event, EventMetatable)
 --@block:dev:3 --no-lines-preserve
 table.freeze(eventInstanceMetatable)
 table.freeze(EventMetatable)
-table.freeze(Event)
 
 return Event
