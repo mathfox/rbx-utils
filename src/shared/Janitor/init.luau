@@ -158,7 +158,7 @@ local JanitorExport = {
 	end,
 }
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(JanitorExport)
 
 return JanitorExport

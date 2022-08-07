@@ -6,6 +6,7 @@ if not plugin or RunService:IsRunning() then
 	return
 end
 
+local CollectionService = game:GetService("CollectionService")
 local ServerStorage = game:GetService("ServerStorage")
 
 local Constants = require(script.Constants)
@@ -331,18 +332,8 @@ local function onContainerAdd(container: LuaSourceContainer)
 	end)
 end
 
-for _, location in Constants.containerLocations do
-	location.DescendantAdded:Connect(function(descendant)
-		if descendant:IsA("LuaSourceContainer") then
-			onContainerAdd(descendant)
-		end
-	end)
-
-	for _, container in location:GetDescendants() do
-		if container:IsA("LuaSourceContainer") then
-			onContainerAdd(container)
-		end
-	end
+for _, container in CollectionService:GetTagged("RICBContainer") do
+	onContainerAdd(container)
 end
 
 local shouldCreateAPI = true

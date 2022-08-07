@@ -17,25 +17,32 @@ local Type = require(script.Parent.Parent.Type)
 
 local Event = {}
 
-local eventMetatable = {
+local eventInstanceMetatable = {
 	__tostring = function(self)
 		return ("RoactHostEvent(%s)"):format(self.name)
 	end,
 }
 
-setmetatable(Event, {
+local EventMetatable = {
 	__index = function(_, eventName)
 		local event = {
 			[Type] = Type.HostEvent,
 			name = eventName,
 		}
 
-		setmetatable(event, eventMetatable)
+		setmetatable(event, eventInstanceMetatable)
 
 		Event[eventName] = event
 
 		return event
 	end,
-})
+}
+
+setmetatable(Event, EventMetatable)
+
+--@block:dev:3 --no-lines-preserve
+table.freeze(eventInstanceMetatable)
+table.freeze(EventMetatable)
+table.freeze(Event)
 
 return Event
