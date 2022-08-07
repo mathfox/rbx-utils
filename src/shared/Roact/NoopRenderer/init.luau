@@ -19,7 +19,7 @@ function NoopRenderer.updateHostNode(_, node)
 	return node
 end
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(NoopRenderer)
 
 return NoopRenderer
