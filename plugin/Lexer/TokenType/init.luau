@@ -31,15 +31,6 @@ local tokenTypesList = {
 		return code:match("^\t")
 	end),
 
-	TokenType.new("CODE", function(code)
-		local commentStartIndex = code:find("%-%-")
-		if commentStartIndex then
-			return code:sub(1, commentStartIndex - 1):match("^[ \t%w%p]+")
-		else
-			return code:match("^[ \t%w%p]+")
-		end
-	end),
-
 	TokenType.new("MULTIPLE_LINE_COMMENT", function(code)
 		if code:match("^%-%-%[%[") then
 			local _, commentEndIndex = code:sub(5):find("%]%]")
@@ -56,6 +47,22 @@ local tokenTypesList = {
 		else
 			return code:match("^%-%-.*")
 		end
+	end),
+
+	TokenType.new("CODE", function(code)
+		-- first we should check if it's the last line of the code
+		local _, lineEndIndex = code:find(".-[\r\n]")
+		if lineEndIndex then
+			-- the catch here is that our line could contain the comment at this point, so we have to get the actual line without spaces/tabs
+			code = code:sub(1, lineEndIndex - 1)
+		end
+
+		local commentPrefixStartIndex = code:find("[ \t]*%-%-")
+		if commentPrefixStartIndex then
+			return code:sub(1, commentPrefixStartIndex - 1)
+		end
+
+		return code
 	end),
 }
 

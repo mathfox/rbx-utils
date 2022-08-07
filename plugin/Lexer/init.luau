@@ -40,7 +40,7 @@ function LexerImpl:runAnalysis()
 		end
 
 		if not hasMatchedTokenType then
-			error(("Could not match any TokenType at the %d position"):format(pos), 2)
+			error(("Could not match any TokenType at the %d position in %s"):format(pos, self.container:GetFullName()), 2)
 		end
 	end
 
