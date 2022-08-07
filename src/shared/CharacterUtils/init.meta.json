@@ -1,9 +1,7 @@
 {
    "properties": {
-      "Attributes": {
-         "RICBContainer": {
-            "Bool": true
-         }
-      }
+      "Tags": [
+         "RICBContainer"
+      ]
    }
 }
