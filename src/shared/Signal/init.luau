@@ -143,7 +143,7 @@ function Signal.prototype:destroy()
 	self._last = nil
 end
 
---@block:dev:3
+--@block:dev:3 --no-lines-preserve
 table.freeze(Signal)
 table.freeze(Signal.prototype)
 

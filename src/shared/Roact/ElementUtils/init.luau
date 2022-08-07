@@ -94,7 +94,7 @@ function ElementUtils.getElementByKey(elements, hostKey)
 	error("Invalid elements")
 end
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(ElementUtils)
 
 return ElementUtils
