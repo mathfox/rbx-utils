@@ -36,7 +36,7 @@ This is a bug in Roact.
 It was triggered by the component %q.
 ]]
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(invalidSetStateMessages)
 
 return invalidSetStateMessages
