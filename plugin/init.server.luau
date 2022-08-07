@@ -1,6 +1,8 @@
 --!strict
 
-if not plugin then
+local RunService = game:GetService("RunService")
+
+if not plugin or RunService:IsRunning() then
 	return
 end
 
