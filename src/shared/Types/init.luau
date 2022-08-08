@@ -91,24 +91,23 @@ type ConnectionImpl = {
 	__tostring: () -> "Connection",
 
 	connected: true,
+
 	disconnect: (self: Connection) -> (),
 }
 export type Connection = typeof(setmetatable({} :: {
 	connected: false?,
 }, {} :: ConnectionImpl))
-export type Signal<T... = ...any> = typeof(setmetatable(
-	{},
-	{} :: {
-		__tostring: () -> "Signal",
-		__index: {
-			connect: (self: Signal<T...>, fn: (T...) -> ()) -> Connection,
-			once: (self: Signal<T...>, fn: (T...) -> ()) -> Connection,
-			fire: (self: Signal<T...>, T...) -> (),
-			wait: (self: Signal<T...>) -> T...,
-			destroy: (self: Signal<T...>) -> (),
-		},
-	}
-))
+export type SignalImpl<T...> = {
+	connect: (self: Signal<T...>, fn: (T...) -> ()) -> Connection,
+	once: (self: Signal<T...>, fn: (T...) -> ()) -> Connection,
+	fire: (self: Signal<T...>, T...) -> (),
+	wait: (self: Signal<T...>) -> T...,
+	destroy: (self: Signal<T...>) -> (),
+}
+export type Signal<T... = ...any> = typeof(setmetatable({}, {} :: {
+	__tostring: () -> "Signal",
+	__index: SignalImpl<T...>,
+}))
 
 export type PromiseExecutor<T...> = (resolve: (T...) -> (), reject: (...any) -> (), onCancel: (cancellationHook: (() -> ())?) -> boolean) -> ()
 --@block:dev:1 --no-lines-preserve

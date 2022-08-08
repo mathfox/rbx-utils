@@ -1,4 +1,4 @@
-local function loadDescendantsFilter(parent: Instance, predicate: (ModuleScript) -> boolean): { any }
+local function loadDescendantsFilter(parent: Instance, predicate: (ModuleScript) -> boolean)
 	local arr = {}
 
 	for _, descendant in parent:GetDescendants() do

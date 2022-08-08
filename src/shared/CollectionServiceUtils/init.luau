@@ -1,7 +1,7 @@
 local CollectionServiceUtils = {
 	findFirstAncestorOfTag = require(script.findFirstAncestorOfTag),
-	removeAllTags = require(script.removeAllTags),
 	hasTags = require(script.hasTags),
+	removeAllTags = require(script.removeAllTags),
 }
 
 --@block:dev:2 --no-lines-preserve

@@ -1,4 +1,4 @@
-local function loadDescendants(parent: Instance): { any }
+local function loadDescendants(parent: Instance)
 	local arr = {}
 
 	for _, descendant in parent:GetDescendants() do

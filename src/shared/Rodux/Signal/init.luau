@@ -21,8 +21,25 @@ local function immutableRemoveValue(list, removeValue)
 	return new
 end
 
-type SignalImpl = {}
-type Signal = {}
+type Listener = {
+	callback: (...any) -> ...any,
+	disconnected: boolean,
+	connectTraceback: string,
+	disconnectTraceback: string?,
+}
+
+type SignalImpl = {
+	__index: SignalImpl,
+
+	_fire: (self: Signal) -> (),
+
+	connect: (self: Signal) -> (),
+}
+type Signal = typeof(setmetatable({} :: {
+	_listeners: { Listener },
+	-- TODO: store type
+	_store: any,
+}, {} :: SignalImpl))
 
 local SignalImpl = {}
 SignalImpl.__index = SignalImpl

@@ -3,13 +3,6 @@ local Types = require(script.Parent.Types)
 export type Signal<T... = ...any> = Types.Signal<T...>
 export type Connection = Types.Connection
 
-type SignalConstructor = {
-	is: (object: any) -> boolean,
-	new: <T...>() -> Signal<T...>,
-	prototype: Signal,
-}
-type AnyConnection = Connection
-
 local freeRunnerThread: thread? = nil
 
 local function acquireRunnerThreadAndCallEventHandler(fn: (...any) -> (), ...)
@@ -27,11 +20,11 @@ local function runEventHandlerInFreeThread(...)
 	end
 end
 
-local Connection = {} :: { [any]: any, _next: any }
+local Connection = {}
 Connection.connected = true
 Connection.__index = Connection
 
-function Connection.__tostring(): "Connection"
+function Connection.__tostring()
 	return "Connection"
 end
 
@@ -55,11 +48,14 @@ function Connection:disconnect()
 	end
 end
 
-local Signal = {} :: { [any]: any, _last: any }
+--@block:dev:2
+table.freeze(Connection)
+
+local Signal = {}
 Signal.prototype = {}
 Signal.__index = Signal.prototype
 
-function Signal.__tostring(): "Signal"
+function Signal.__tostring()
 	return "Signal"
 end
 
@@ -71,17 +67,18 @@ function Signal.new(): Signal
 	return setmetatable({}, Signal)
 end
 
-function Signal.prototype:connect(fn: (...any) -> ())
-	local connection = setmetatable({ _signal = self, _fn = fn }, Connection) :: Connection
+function Signal.prototype:connect(fn: (...any) -> ()): Connection
+	local connection = setmetatable({ _signal = self, _fn = fn }, Connection)
 
 	if self._last then
-		(connection :: AnyConnection & { _next: any })._next = self._last
+		connection._next = self._last
 	end
 	self._last = connection
 
 	return connection
 end
 
+--@block:dev:1
 -- reference: https://developer.roblox.com/en-us/resources/release-note/Release-Notes-for-531
 function Signal.prototype:once(fn: (...any) -> ())
 	local connection: Connection = nil
@@ -96,7 +93,7 @@ function Signal.prototype:once(fn: (...any) -> ())
 	}, Connection)
 
 	if self._last then
-		(connection :: AnyConnection & { _next: any })._next = self._last
+		connection._next = self._last
 	end
 	self._last = connection
 
@@ -147,4 +144,4 @@ end
 table.freeze(Signal)
 table.freeze(Signal.prototype)
 
-return Signal :: SignalConstructor
+return Signal
