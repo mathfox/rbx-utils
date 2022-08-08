@@ -7,9 +7,7 @@ export type Result<T, E> = Types.Result<T, E>
 export type Err<E> = Types.Err<E>
 export type Ok<T> = Types.Ok<T>
 
-local Result = {}
-local Err = {}
-local Ok = {}
+local Result, Err, Ok = {}, {}, {}
 
 function Result:isOk()
 	return getmetatable(self) == Ok
@@ -185,7 +183,7 @@ table.freeze(Ok)
 table.freeze(Err)
 
 local ResultExport = {
-	Ok = function<T>(value): Ok<T>
+	Ok = function<T>(value: T): Ok<T>
 		local ok = setmetatable({ _v = value }, Ok)
 
 		--@block:dev:2
@@ -194,7 +192,7 @@ local ResultExport = {
 		return ok
 	end,
 
-	Err = function<E>(err): Err<E>
+	Err = function<E>(err: E): Err<E>
 		local err = setmetatable({ _v = err }, Err)
 
 		--@block:dev:2
@@ -204,7 +202,7 @@ local ResultExport = {
 	end,
 }
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(ResultExport)
 
 return ResultExport

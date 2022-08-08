@@ -160,7 +160,7 @@ local OptionExport = {
 	None = None,
 }
 
---@block:dev:2
+--@block:dev:2 --no-lines-preserve
 table.freeze(OptionExport)
 
 return OptionExport

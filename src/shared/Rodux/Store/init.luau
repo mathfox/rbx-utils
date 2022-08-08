@@ -176,13 +176,13 @@ function Store:flush()
 
 	self._mutatedSinceFlush = false
 
-	-- On self.changed:fire(), further actions may be immediately dispatched, in
+	-- On self.changed:_fire(), further actions may be immediately dispatched, in
 	-- which case self._lastState will be set to the most recent self._state,
 	-- unless we cache this value first
 	local state = self._state
 
 	local ok, errorResult = xpcall(function()
-		self.changed:fire(state, self._lastState)
+		self.changed:_fire(state, self._lastState)
 	end, tracebackReporter)
 
 	if not ok then

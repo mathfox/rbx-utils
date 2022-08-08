@@ -9,21 +9,6 @@ local Types = require(script.Parent.Parent.Types)
 
 type Store<State = any> = Types.RoduxStore<State>
 
-local function immutableAppend(list, ...)
-	local new = {}
-	local len = #list
-
-	for key = 1, len do
-		new[key] = list[key]
-	end
-
-	for i = 1, select("#", ...) do
-		new[len + i] = select(i, ...)
-	end
-
-	return new
-end
-
 local function immutableRemoveValue(list, removeValue)
 	local new = {}
 
@@ -36,10 +21,13 @@ local function immutableRemoveValue(list, removeValue)
 	return new
 end
 
-local Signal = {}
-Signal.__index = Signal
+type SignalImpl = {}
+type Signal = {}
 
-function Signal:connect(callback)
+local SignalImpl = {}
+SignalImpl.__index = SignalImpl
+
+function SignalImpl:connect(callback: (...any) -> ...any)
 	--@block:dev:4
 	if type(callback) ~= "function" then
 		error("invalid #1 argument, expected a function", 2)
@@ -61,15 +49,17 @@ function Signal:connect(callback)
 		disconnectTraceback = nil,
 	}
 
-	self._listeners = immutableAppend(self._listeners, listener)
+	local newListeners = table.clone(self._listeners)
+	table.insert(newListeners, listener)
+	self._listeners = newListeners
 
 	return function()
 		if listener.disconnected then
-			error(("Listener connected at: \n%s\n" .. "was already disconnected at: \n%s\n"):format(tostring(listener.connectTraceback), tostring(listener.disconnectTraceback)))
+			error(("Listener connected at: \n%s\n" .. "was already disconnected at: \n%s\n"):format(tostring(listener.connectTraceback), tostring(listener.disconnectTraceback)), 2)
 		end
 
 		if self._store and self._store._isDispatching then
-			error("You may not unsubscribe from a store listener while the reducer is executing.")
+			error("You may not unsubscribe from a store listener while the reducer is executing.", 2)
 		end
 
 		listener.disconnected = true
@@ -78,11 +68,11 @@ function Signal:connect(callback)
 	end
 end
 
-function Signal:fire(...)
+function SignalImpl:_fire(newState, prevState)
 	for _, listener in self._listeners do
 		if not listener.disconnected then
 			local co = coroutine.create(listener.callback)
-			local ok, message = coroutine.resume(co, ...)
+			local ok, message = coroutine.resume(co, newState, prevState)
 			if not ok then
 				error(message, 2)
 			elseif coroutine.status(co) ~= "dead" then
@@ -92,23 +82,24 @@ function Signal:fire(...)
 	end
 end
 
-export type RoduxInnerSignalImpl = {
-	__index: RoduxInnerSignalImpl,
-	connect: (self: RoduxInnerSignalImpl) -> (),
-	fire: (self: RoduxInnerSignalImpl) -> (),
-}
-export type RoduxInnerSignal = typeof(setmetatable({}, {} :: RoduxInnerSignalImpl))
+--@block:dev:2
+table.freeze(SignalImpl)
 
-local SignalExport = {}
+local Signal = {}
 
-function SignalExport.new(store: Store): RoduxInnerSignal
-	return setmetatable({
+function Signal.new(store: Store): Signal
+	local signal = setmetatable({
 		_listeners = {},
 		_store = store,
-	}, Signal)
+	}, SignalImpl)
+
+	--@block:dev:2 --no-lines-preserve
+	table.freeze(signal)
+
+	return signal
 end
 
---@block:dev:2
-table.freeze(SignalExport)
+--@block:dev:2 --no-lines-preserve
+table.freeze(Signal)
 
-return SignalExport
+return Signal
