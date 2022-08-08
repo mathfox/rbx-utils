@@ -1,6 +1,5 @@
 return function()
 	local Children = require(script.Parent.Parent.PropMarkers.Children)
-	local GlobalConfig = require(script.Parent.Parent.GlobalConfig)
 	local ElementKind = require(script.Parent.Parent.ElementKind)
 	local Component = require(script.Parent.Parent.Component)
 	local Logging = require(script.Parent.Parent.Logging)
@@ -100,15 +99,9 @@ return function()
 	end)
 
 	it("should have a `source` member if elementTracing is set", function()
-		local config = {
-			elementTracing = true,
-		}
+		local element = createElement("StringValue")
 
-		GlobalConfig.scoped(config, function()
-			local element = createElement("StringValue")
-
-			expect(element.source).to.be.a("string")
-		end)
+		expect(element.source).to.be.a("string")
 	end)
 
 	it("should throw an error on attempt to modify element", function()

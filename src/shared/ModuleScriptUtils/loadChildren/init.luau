@@ -1,4 +1,4 @@
-local function loadChildren(parent: Instance): { any }
+local function loadChildren(parent: Instance)
 	local arr = {}
 
 	for _, child in parent:GetChildren() do

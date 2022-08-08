@@ -24,7 +24,7 @@ local function SymbolConstructor(name: string?): Symbol
 
 	setmetatable(symbol, symbolMetatable)
 
-	--@block:dev:3
+	--@block:dev:3 --no-lines-preserve
 	table.freeze(symbolMetatable)
 	table.freeze(symbol)
 

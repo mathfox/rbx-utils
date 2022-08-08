@@ -10,8 +10,10 @@ local function makeActionCreator<Type, Action, Args...>(name: Type, fn: (Args...
 		__call = function(_, ...: Args...): Action & { type: Type }
 			local result = fn(...)
 
-			--@block:dev:2
-			assert(type(result) == "table", "Invalid action: An action creator must return a table")
+			--@block:dev:4
+			if type(result) ~= "table" then
+				error("Invalid action: An action creator must return a table", 2)
+			end
 
 			result.type = name
 
@@ -21,7 +23,7 @@ local function makeActionCreator<Type, Action, Args...>(name: Type, fn: (Args...
 
 	setmetatable(actionCreator, actionCreatorMetatable)
 
-	--@block:dev:3
+	--@block:dev:3 --no-lines-preserve
 	table.freeze(actionCreatorMetatable)
 	table.freeze(actionCreator)
 

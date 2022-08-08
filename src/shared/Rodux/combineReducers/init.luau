@@ -11,11 +11,15 @@ local function combineReducers(map: { [any]: Reducer<any, AnyAction> }): Reducer
 	end
 
 	return function(state: { [any]: any }?, action: AnyAction)
+		if state == nil then
+			state = {}
+		end
+
 		local newState = {}
 
 		for key, reducer in map do
 			-- Each reducer gets its own state, not the entire state table
-			newState[key] = reducer(if state then state[key] else nil, action)
+			newState[key] = reducer(state[key], action)
 		end
 
 		return newState

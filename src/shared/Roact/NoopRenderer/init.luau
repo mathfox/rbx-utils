@@ -6,8 +6,7 @@
 local NoopRenderer = {}
 
 function NoopRenderer.isHostObject(target)
-	-- Attempting to use NoopRenderer to target a Roblox instance is almost
-	-- certainly a mistake.
+	-- Attempting to use NoopRenderer to target a Roblox instance is almost certainly a mistake.
 	return target == nil
 end
 

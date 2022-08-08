@@ -11,11 +11,24 @@ return function()
 
 	it("should throw an error on attempt to modify the export table", function()
 		expect(function()
-			NumberSequenceUtils.NEW_FIELD = {}
+			NumberSequenceUtils.newField = {}
 		end).to.throw()
 
 		expect(function()
 			setmetatable(NumberSequenceUtils, {})
 		end).to.throw()
+	end)
+
+	it("should expose only known APIs", function()
+		local knownAPIs = {
+			evaluateNumberSequence = "function",
+			multiplyNumberSequence = "function",
+		}
+
+		expect(function()
+			for key, value in NumberSequenceUtils do
+				assert(type(value) == knownAPIs[key])
+			end
+		end).never.throw()
 	end)
 end

@@ -1,11 +1,11 @@
-local Option = require(script.Parent.Parent.Option)
-
 --[[
 	Merges values from zero or more tables onto a target table.
    If a value is set to None, it will instead be removed from the table.
 
    reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
 ]]
+
+local Option = require(script.Parent.Parent.Option)
 
 local function assign<K, V>(target: { [K]: V }, ...: { [K]: V }?)
 	for index = 1, select("#", ...) do

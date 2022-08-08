@@ -11,7 +11,7 @@ return function()
 
 	it("should throw an error on attempt to modify the export table", function()
 		expect(function()
-			CollectionServiceUtils.NEW_FIELD = {}
+			CollectionServiceUtils.newField = {}
 		end).to.throw()
 
 		expect(function()
@@ -19,8 +19,8 @@ return function()
 		end).to.throw()
 	end)
 
-	it("should expose only known apis", function()
-		local APIS = {
+	it("should expose only known APIs", function()
+		local knownAPIs = {
 			findFirstAncestorOfTag = "function",
 			hasTags = "function",
 			removeAllTags = "function",
@@ -28,8 +28,7 @@ return function()
 
 		expect(function()
 			for key, value in CollectionServiceUtils do
-				assert(APIS[key] ~= nil)
-				assert(type(value) == APIS[key])
+				assert(type(value) == knownAPIs[key])
 			end
 		end).never.throw()
 	end)

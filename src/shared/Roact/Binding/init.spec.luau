@@ -1,5 +1,4 @@
 return function()
-	local GlobalConfig = require(script.Parent.Parent.GlobalConfig)
 	local createSpy = require(script.Parent.Parent.createSpy)
 	local Type = require(script.Parent.Parent.Type)
 

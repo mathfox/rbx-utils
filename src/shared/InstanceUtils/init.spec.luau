@@ -25,6 +25,8 @@ return function()
 			clearAllChildrenWhichIsA = "function",
 			clearAllDescendantsOfClass = "function",
 			clearAllDescendantsWhichIsA = "function",
+			clearChildrenByPredicate = "function",
+			clearDescendantsByPredicate = "function",
 			findFirstDescendantOfClass = "function",
 			findFirstDescendantWhichIsA = "function",
 			getChildrenOfClass = "function",

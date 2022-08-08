@@ -11,7 +11,7 @@ return function()
 
 	it("should throw an error on attempt to modify the export table", function()
 		expect(function()
-			HumanoidUtils.NEW_FIELD = {}
+			HumanoidUtils.newField = {}
 		end).to.throw()
 
 		expect(function()
@@ -19,7 +19,7 @@ return function()
 		end).to.throw()
 	end)
 
-	it("should expose only known apis", function()
+	it("should expose only known APIs", function()
 		local knownAPIs = {
 			getAliveHumanoidFromDescendant = "function",
 			getAliveHumanoidFromModel = "function",
@@ -33,7 +33,6 @@ return function()
 
 		expect(function()
 			for key, value in HumanoidUtils do
-				assert(knownAPIs[key] ~= nil)
 				assert(type(value) == knownAPIs[key])
 			end
 		end).never.throw()

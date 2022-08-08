@@ -1,34 +1,35 @@
 return function()
-	local FunctionUtils = require(script.Parent)
+	local CharacterUtils = require(script.Parent)
 
 	it("should be a table", function()
-		expect(FunctionUtils).to.be.a("table")
+		expect(CharacterUtils).to.be.a("table")
 	end)
 
 	it("should not contain a metatable", function()
-		expect(getmetatable(FunctionUtils)).to.equal(nil)
+		expect(getmetatable(CharacterUtils)).to.equal(nil)
 	end)
 
 	it("should throw an error on attempt to modify the export table", function()
 		expect(function()
-			FunctionUtils.newField = {}
+			CharacterUtils.newField = {}
 		end).to.throw()
 
 		expect(function()
-			setmetatable(FunctionUtils, {})
+			setmetatable(CharacterUtils, {})
 		end).to.throw()
 	end)
 
 	it("should expose only known APIs", function()
 		local knownAPIs = {
-			bindArgs = "function",
-			noop = "function",
-			returnArgs = "function",
-			void = "function",
+			getAlivePlayerHumanoid = "function",
+			getAlivePlayerRootPart = "function",
+			getPlayerHumanoid = "function",
+			getPlayerRootPart = "function",
+			unequipPlayerTools = "function",
 		}
 
 		expect(function()
-			for key, value in FunctionUtils do
+			for key, value in CharacterUtils do
 				assert(type(value) == knownAPIs[key])
 			end
 		end).never.throw()

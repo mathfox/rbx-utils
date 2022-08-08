@@ -11,7 +11,7 @@ return function()
 
 	it("should throw an error on attempt to modify the export table", function()
 		expect(function()
-			AdorneeUtils.NEW_FIELD = {}
+			AdorneeUtils.newField = {}
 		end).to.throw()
 
 		expect(function()

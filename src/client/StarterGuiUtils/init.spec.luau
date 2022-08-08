@@ -11,11 +11,24 @@ return function()
 
 	it("should throw an error on attempt to modify the export table", function()
 		expect(function()
-			StarterGuiUtils.NEW_FIELD = {}
+			StarterGuiUtils.newField = {}
 		end).to.throw()
 
 		expect(function()
 			setmetatable(StarterGuiUtils, {})
 		end).to.throw()
+	end)
+
+	it("should expose only known APIs", function()
+		local knownAPIs = {
+			setAllCoreGuisEnabledIgnore = "function",
+			setCoreGuisEnabled = "function",
+		}
+
+		expect(function()
+			for key, value in StarterGuiUtils do
+				assert(type(value) == knownAPIs[key])
+			end
+		end).never.throw()
 	end)
 end
