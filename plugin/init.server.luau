@@ -17,10 +17,6 @@ local Token = require(script.Lexer.Token)
 type Token = Token.Token
 
 local function onContainerAdd(container: LuaSourceContainer)
-	if container:GetAttribute("RICBIgnore") then
-		return
-	end
-
 	local destroyingConnnection: RBXScriptConnection = nil
 	local sourceChangedConnection: RBXScriptConnection = nil
 
