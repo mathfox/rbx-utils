@@ -2,7 +2,6 @@ return function()
 	local createReconciler = require(script.Parent.Parent.createReconciler)
 	local createElement = require(script.Parent.Parent.createElement)
 	local NoopRenderer = require(script.Parent.Parent.NoopRenderer)
-	local GlobalConfig = require(script.Parent.Parent.GlobalConfig)
 	local createSpy = require(script.Parent.Parent.createSpy)
 
 	local Component = require(script.Parent.Parent.Component)

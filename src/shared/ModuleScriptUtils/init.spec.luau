@@ -11,7 +11,7 @@ return function()
 
 	it("should throw an error on attempt to modify the export table", function()
 		expect(function()
-			ModuleScriptUtils.NEW_FIELD = {}
+			ModuleScriptUtils.newField = {}
 		end).to.throw()
 
 		expect(function()
@@ -29,7 +29,7 @@ return function()
 
 		expect(function()
 			for key, value in ModuleScriptUtils do
-				assert(knownAPIs[key] ~= nil and type(value) == knownAPIs[key])
+				assert(type(value) == knownAPIs[key])
 			end
 		end).never.throw()
 	end)

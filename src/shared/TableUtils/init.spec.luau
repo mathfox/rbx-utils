@@ -11,7 +11,7 @@ return function()
 
 	it("should throw an error on attempt to modify the export table", function()
 		expect(function()
-			TableUtils.NEW_FIELD = {}
+			TableUtils.newField = {}
 		end).to.throw()
 
 		expect(function()
@@ -19,7 +19,7 @@ return function()
 		end).to.throw()
 	end)
 
-	it("should expose known APIs", function()
+	it("should expose only known APIs", function()
 		local knownAPIs = {
 			assign = "function",
 			copy = "function",
@@ -45,7 +45,6 @@ return function()
 
 		expect(function()
 			for key, value in TableUtils do
-				assert(knownAPIs[key] ~= nil)
 				assert(type(value) == knownAPIs[key])
 			end
 		end).never.throw()

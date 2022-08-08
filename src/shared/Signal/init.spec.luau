@@ -13,7 +13,7 @@ return function()
 
 	it("should throw an error on attempt to modify the export table", function()
 		expect(function()
-			Signal._ = {}
+			Signal.newField = {}
 		end).to.throw()
 
 		expect(function()
