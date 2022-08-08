@@ -11,11 +11,25 @@ return function()
 
 	it("should throw an error on attempt to modify the export table", function()
 		expect(function()
-			PhysicsServiceUtils.NEW_FIELD = {}
+			PhysicsServiceUtils.newField = {}
 		end).to.throw()
 
 		expect(function()
 			setmetatable(PhysicsServiceUtils, {})
 		end).to.throw()
+	end)
+
+	it("should expose only known APIs", function()
+		local knownAPIs = {
+			createCollisionGroupIfNotCreated = "function",
+			doesCollisionGroupWithIdExist = "function",
+			doesCollisionGroupWithNameExist = "function",
+		}
+
+		expect(function()
+			for key, value in PhysicsServiceUtils do
+				assert(type(value) == knownAPIs[key])
+			end
+		end).never.throw()
 	end)
 end
