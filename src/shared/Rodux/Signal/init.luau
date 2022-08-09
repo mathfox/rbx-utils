@@ -105,15 +105,10 @@ table.freeze(SignalImpl)
 local Signal = {}
 
 function Signal.new(store: Store): Signal
-	local signal = setmetatable({
+	return setmetatable({
 		_listeners = {},
 		_store = store,
 	}, SignalImpl)
-
-	--@block:dev:2 --no-lines-preserve
-	table.freeze(signal)
-
-	return signal
 end
 
 --@block:dev:2 --no-lines-preserve
